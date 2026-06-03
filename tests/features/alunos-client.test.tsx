@@ -91,7 +91,7 @@ describe('AlunosClient — modal novo aluno', () => {
     render(<AlunosClient alunos={alunosMock} turmas={turmasMock} escolaId="e1" />)
     fireEvent.click(screen.getByRole('button', { name: /novo aluno/i }))
     expect(screen.getAllByText(/responsáveis/i).length).toBeGreaterThan(0)
-    expect(screen.getAllByText(/portal da família/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/👤 Principal/i)).toBeInTheDocument()
   })
 
   it('campo email aparece na seção de responsável', () => {
@@ -163,6 +163,9 @@ describe('AlunosClient — modal novo aluno', () => {
 
     const telInputs = screen.getAllByPlaceholderText(/\(11\)/i)
     await userEvent.type(telInputs[0], '11999990000')
+
+    const emailInputs = screen.getAllByPlaceholderText('nome@email.com')
+    await userEvent.type(emailInputs[0], 'pai@exemplo.com')
 
     fireEvent.click(screen.getByRole('button', { name: /salvar aluno/i }))
 
