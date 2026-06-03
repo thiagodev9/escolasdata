@@ -1,153 +1,150 @@
-import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import { PrintTrigger } from '@/components/relatorios/print-trigger'
 
-export default async function RelatorioFrequenciaPage({
+export const dynamic = 'force-dynamic'
+
+export default async function PrintFrequenciaPage({
   searchParams,
-}: {
-  searchParams: { mes?: string; ano?: string; turma?: string }
-}) {
+}: { searchParams: { mes?: string; ano?: string; turma?: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await (supabase as any).auth.getUser()
   if (!user) redirect('/login')
 
-  const admin = createAdmin()
-  const { data: usuario } = await (admin as any)
-    .from('usuarios')
-    .select('escola_id, escola:escolas(nome)')
-    .eq('id', user.id)
-    .single() as { data: { escola_id: string; escola: { nome: string } | null } | null }
+  const admin = createAdmin() as any
+  const { data: usuario } = await admin.from('usuarios').select('escola_id').eq('id', user.id).single()
+  const escolaId = usuario?.escola_id
 
-  const escolaId = usuario?.escola_id ?? ''
+  const hoje = new Date()
+  const mes  = parseInt(searchParams.mes  ?? String(hoje.getMonth() + 1))
+  const ano  = parseInt(searchParams.ano  ?? String(hoje.getFullYear()))
+  const turmaFiltro = searchParams.turma ?? ''
 
-  const hoje     = new Date()
-  const ano      = parseInt(searchParams.ano  ?? String(hoje.getFullYear()))
-  const mes      = parseInt(searchParams.mes  ?? String(hoje.getMonth() + 1))
-  const inicio   = `${ano}-${String(mes).padStart(2, '0')}-01`
-  const fim      = `${ano}-${String(mes).padStart(2, '0')}-31`
+  const { data: config } = await admin.from('configuracoes_escola')
+    .select('nome_fantasia, cidade, estado').eq('escola_id', escolaId).maybeSingle()
+  const { data: escola } = await admin.from('escolas').select('nome').eq('id', escolaId).single()
+  const nomeEscola = config?.nome_fantasia || escola?.nome || 'Escola'
 
-  // Alunos ativos
-  const { data: alunos } = await (admin as any)
-    .from('alunos')
+  const mesStr = `${ano}-${String(mes).padStart(2,'0')}`
+  const MESES = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+
+  const { data: alunos } = await admin.from('alunos')
     .select('id, nome, alunos_turmas(turma:turmas(nome))')
+    .eq('escola_id', escolaId).eq('status', 'ativo').order('nome')
+
+  const filtrados = turmaFiltro
+    ? (alunos ?? []).filter((a: any) => a.alunos_turmas?.[0]?.turma?.nome === turmaFiltro)
+    : (alunos ?? [])
+
+  const { data: presencas } = await admin.from('presencas')
+    .select('aluno_id, presente, data')
     .eq('escola_id', escolaId)
-    .eq('status', 'ativo')
-    .order('nome') as { data: { id: string; nome: string; alunos_turmas: { turma: { nome: string } | null }[] }[] | null }
+    .gte('data', `${mesStr}-01`)
+    .lte('data', `${mesStr}-31`)
 
-  // Presenças do mês
-  const { data: presencas } = await (admin as any)
-    .from('presencas')
-    .select('aluno_id, data, presente')
-    .eq('escola_id', escolaId)
-    .gte('data', inicio)
-    .lte('data', fim) as { data: { aluno_id: string; data: string; presente: boolean }[] | null }
+  const diasSet = new Set<string>()
+  for (const p of (presencas ?? [])) diasSet.add(p.data)
+  const totalDias = diasSet.size || 1
 
-  const lista     = alunos ?? []
-  const presMap   = new Map<string, number>()
-  const totalMap  = new Map<string, number>()
-
-  for (const p of presencas ?? []) {
-    const cur  = presMap.get(p.aluno_id) ?? 0
-    const tot  = totalMap.get(p.aluno_id) ?? 0
-    if (p.presente) presMap.set(p.aluno_id, cur + 1)
-    totalMap.set(p.aluno_id, tot + 1)
+  const presMap: Record<string, { presentes: number; faltas: number }> = {}
+  for (const p of (presencas ?? [])) {
+    if (!presMap[p.aluno_id]) presMap[p.aluno_id] = { presentes: 0, faltas: 0 }
+    if (p.presente) presMap[p.aluno_id].presentes++
+    else presMap[p.aluno_id].faltas++
   }
 
-  const porTurma: Record<string, typeof lista> = {}
-  for (const aluno of lista) {
-    const turma = aluno.alunos_turmas?.[0]?.turma?.nome ?? 'Sem turma'
-    if (searchParams.turma && turma !== searchParams.turma) continue
-    if (!porTurma[turma]) porTurma[turma] = []
-    porTurma[turma].push(aluno)
+  const porTurma: Record<string, any[]> = {}
+  for (const a of filtrados) {
+    const t = a.alunos_turmas?.[0]?.turma?.nome ?? 'Sem Turma'
+    if (!porTurma[t]) porTurma[t] = []
+    porTurma[t].push(a)
   }
-
-  const nomeMes = new Date(ano, mes - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
-  const hojeStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
 
   return (
-    <>
-      <PrintTrigger />
-      <div style={{ padding: '0 0 24px 0' }}>
-        {/* Cabeçalho */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #004ac6', paddingBottom: '16px', marginBottom: '24px' }}>
-          <div>
-            <p style={{ fontSize: '10px', fontWeight: 700, color: '#004ac6', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '4px' }}>
-              {usuario?.escola?.nome ?? 'EduCare'}
-            </p>
-            <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#1B3A6B' }}>Relatório de Frequência</h1>
-            <p style={{ fontSize: '12px', color: '#666', marginTop: '4px', textTransform: 'capitalize' }}>
-              {nomeMes} · Gerado em {hojeStr}
-            </p>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '11px', color: '#666' }}>Total Alunos</p>
-            <p style={{ fontSize: '28px', fontWeight: 800, color: '#004ac6' }}>{lista.length}</p>
-          </div>
-        </div>
-
-        {Object.entries(porTurma).map(([turma, alunos]) => {
-          const total = alunos.length
-          const mediaFreq = total === 0 ? 0 :
-            alunos.reduce((acc, a) => {
-              const pres  = presMap.get(a.id) ?? 0
-              const dias  = totalMap.get(a.id) ?? 0
-              return acc + (dias > 0 ? pres / dias : 0)
-            }, 0) / total * 100
-
-          return (
-            <div key={turma} style={{ marginBottom: '32px', pageBreakInside: 'avoid' }}>
-              <div style={{ background: '#1B3A6B', color: '#fff', padding: '8px 12px', borderRadius: '4px 4px 0 0', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 700, fontSize: '13px' }}>{turma}</span>
-                <span style={{ fontSize: '12px', opacity: 0.8 }}>
-                  {total} alunos · Média {mediaFreq.toFixed(1)}%
-                </span>
-              </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                <thead>
-                  <tr style={{ background: '#f0f4ff' }}>
-                    <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Aluno</th>
-                    <th style={{ padding: '8px 10px', textAlign: 'center', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Presenças</th>
-                    <th style={{ padding: '8px 10px', textAlign: 'center', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Faltas</th>
-                    <th style={{ padding: '8px 10px', textAlign: 'center', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Freq.</th>
-                    <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Ass. Responsável</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {alunos.map((a, i) => {
-                    const pres  = presMap.get(a.id) ?? 0
-                    const dias  = totalMap.get(a.id) ?? 0
-                    const falt  = dias - pres
-                    const freq  = dias > 0 ? (pres / dias * 100).toFixed(1) : '-'
-                    const freqN = dias > 0 ? pres / dias * 100 : 100
-                    const cor   = freqN >= 75 ? '#16a34a' : freqN >= 50 ? '#d97706' : '#dc2626'
-
-                    return (
-                      <tr key={a.id} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
-                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', fontWeight: 600 }}>{a.nome}</td>
-                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', textAlign: 'center' }}>{pres}</td>
-                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', textAlign: 'center', color: falt > 0 ? '#dc2626' : '#555' }}>{falt}</td>
-                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', textAlign: 'center', fontWeight: 700, color: cor }}>
-                          {freq}{freq !== '-' ? '%' : ''}
-                        </td>
-                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8' }}>
-                          <div style={{ borderBottom: '1px solid #aaa', width: '120px', height: '20px' }} />
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+    <html lang="pt-BR">
+      <head>
+        <title>Frequência {MESES[mes]}/{ano} — {nomeEscola}</title>
+        <meta charSet="utf-8" />
+        <style>{`
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: Arial, sans-serif; font-size: 11px; color: #1e293b; background: white; }
+          .page { padding: 20px 24px; max-width: 800px; margin: 0 auto; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #16a34a; padding-bottom: 12px; margin-bottom: 16px; }
+          .escola-nome { font-size: 16px; font-weight: 900; }
+          .escola-sub  { font-size: 10px; color: #64748b; margin-top: 2px; }
+          .titulo      { font-size: 13px; font-weight: 700; color: #16a34a; }
+          .turma-header { background: #f0fdf4; padding: 6px 10px; font-weight: 900; font-size: 12px; color: #15803d; margin: 12px 0 4px; border-left: 3px solid #16a34a; }
+          table { width: 100%; border-collapse: collapse; }
+          th { background: #f8fafc; font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 5px 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          td { padding: 5px 8px; border-bottom: 1px solid #f1f5f9; font-size: 11px; }
+          tr:nth-child(even) td { background: #f8fafc; }
+          .bar-bg { background: #e2e8f0; border-radius: 3px; height: 8px; width: 80px; display: inline-block; overflow: hidden; }
+          .bar-fill { height: 8px; border-radius: 3px; }
+          .footer { margin-top: 20px; font-size: 9px; color: #94a3b8; text-align: right; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+          @media print { @page { margin: 15mm; } }
+        `}</style>
+      </head>
+      <body>
+        <div className="page">
+          <div className="header">
+            <div>
+              <div className="escola-nome">{nomeEscola}</div>
+              <div className="escola-sub">{config?.cidade && config?.estado ? `${config.cidade} — ${config.estado}` : ''}</div>
             </div>
-          )
-        })}
+            <div style={{ textAlign: 'right' }}>
+              <div className="titulo">Frequência — {MESES[mes]}/{ano}</div>
+              <div className="escola-sub">{totalDias} dia(s) letivo(s) · Emitido em {new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+          </div>
 
-        <div style={{ marginTop: '40px', borderTop: '1px solid #e8e1dc', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#999' }}>
-          <span>{usuario?.escola?.nome}</span>
-          <span>EduCare — Sistema de Gestão Escolar</span>
-          <span>{hojeStr}</span>
+          {Object.entries(porTurma).sort(([a],[b]) => a.localeCompare(b)).map(([turma, lista]) => {
+            const mediaFreq = lista.reduce((s, a) => {
+              const p = presMap[a.id]; if (!p) return s
+              return s + (p.presentes / (p.presentes + p.faltas)) * 100
+            }, 0) / (lista.filter(a => presMap[a.id]).length || 1)
+            return (
+              <div key={turma}>
+                <div className="turma-header">
+                  {turma} — {lista.length} aluno{lista.length !== 1 ? 's' : ''}
+                  {!isNaN(mediaFreq) ? ` · Média: ${Math.round(mediaFreq)}%` : ''}
+                </div>
+                <table>
+                  <thead><tr><th>#</th><th>Nome</th><th>Presenças</th><th>Faltas</th><th>% Frequência</th><th>Situação</th></tr></thead>
+                  <tbody>
+                    {lista.map((a: any, i: number) => {
+                      const p = presMap[a.id] ?? { presentes: 0, faltas: 0 }
+                      const total = p.presentes + p.faltas
+                      const pct = total > 0 ? Math.round(p.presentes / total * 100) : null
+                      const cor = pct === null ? '#94a3b8' : pct >= 75 ? '#16a34a' : pct >= 60 ? '#d97706' : '#dc2626'
+                      return (
+                        <tr key={a.id}>
+                          <td style={{ color: '#94a3b8' }}>{i+1}</td>
+                          <td style={{ fontWeight: 600 }}>{a.nome}</td>
+                          <td style={{ color: '#16a34a', fontWeight: 700 }}>{total > 0 ? p.presentes : '—'}</td>
+                          <td style={{ color: p.faltas > 0 ? '#dc2626' : '#94a3b8' }}>{total > 0 ? p.faltas : '—'}</td>
+                          <td>
+                            {pct !== null ? (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <span style={{ fontWeight: 700, color: cor, minWidth: 32 }}>{pct}%</span>
+                                <span className="bar-bg"><span className="bar-fill" style={{ width: `${pct}%`, background: cor }} /></span>
+                              </div>
+                            ) : <span style={{ color: '#94a3b8' }}>—</span>}
+                          </td>
+                          <td style={{ color: cor, fontWeight: 600 }}>
+                            {pct === null ? '—' : pct >= 75 ? 'Regular' : pct >= 60 ? 'Atenção' : 'Crítico'}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )
+          })}
+
+          <div className="footer">Gerado pelo KTX Academy — Sistema de Gestão Escolar</div>
         </div>
-      </div>
-    </>
+      </body>
+    </html>
   )
 }

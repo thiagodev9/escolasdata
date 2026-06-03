@@ -1,125 +1,123 @@
-import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import { PrintTrigger } from '@/components/relatorios/print-trigger'
-import type { Aluno } from '@/lib/supabase/types'
 
-export default async function RelatorioAlunosPage({
-  searchParams,
-}: {
-  searchParams: { turma?: string }
-}) {
+export const dynamic = 'force-dynamic'
+
+export default async function PrintAlunosPage({ searchParams }: { searchParams: { turma?: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await (supabase as any).auth.getUser()
   if (!user) redirect('/login')
 
-  const admin = createAdmin()
+  const admin = createAdmin() as any
+  const { data: usuario } = await admin.from('usuarios').select('escola_id').eq('id', user.id).single()
+  const escolaId = usuario?.escola_id
 
-  const { data: usuario } = await (admin as any)
-    .from('usuarios')
-    .select('escola_id, escola:escolas(nome)')
-    .eq('id', user.id)
-    .single() as { data: { escola_id: string; escola: { nome: string } | null } | null }
+  const { data: config } = await admin.from('configuracoes_escola')
+    .select('nome_fantasia, logo_url, cidade, estado, telefone')
+    .eq('escola_id', escolaId).maybeSingle()
 
-  const escolaId = usuario?.escola_id ?? ''
+  const { data: escola } = await admin.from('escolas').select('nome').eq('id', escolaId).single()
+  const nomeEscola = config?.nome_fantasia || escola?.nome || 'Escola'
 
-  let query = (admin as any)
-    .from('alunos')
-    .select('*, alunos_turmas(turma:turmas(nome))')
+  const { data: alunos } = await admin.from('alunos')
+    .select('id, nome, dt_nascimento, status, alunos_turmas(turma:turmas(nome))')
     .eq('escola_id', escolaId)
     .eq('status', 'ativo')
     .order('nome')
 
-  const { data: alunos } = await query as { data: (Aluno & { alunos_turmas: { turma: { nome: string } | null }[] })[] | null }
+  const turmaParam = searchParams.turma
+  const filtrados = turmaParam
+    ? (alunos ?? []).filter((a: any) => a.alunos_turmas?.[0]?.turma?.nome === turmaParam)
+    : (alunos ?? [])
 
-  const lista = alunos ?? []
-  const porTurma: Record<string, typeof lista> = {}
-  for (const aluno of lista) {
-    const turma = aluno.alunos_turmas?.[0]?.turma?.nome ?? 'Sem turma'
-    if (searchParams.turma && turma !== searchParams.turma) continue
-    if (!porTurma[turma]) porTurma[turma] = []
-    porTurma[turma].push(aluno)
+  const porTurma: Record<string, any[]> = {}
+  for (const a of filtrados) {
+    const t = a.alunos_turmas?.[0]?.turma?.nome ?? 'Sem Turma'
+    if (!porTurma[t]) porTurma[t] = []
+    porTurma[t].push(a)
   }
 
-  const hoje = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+  const hoje = new Date().toLocaleDateString('pt-BR')
+
+  function calcIdade(dt: string) {
+    if (!dt) return ''
+    const n = new Date(dt + 'T00:00:00')
+    const d = new Date()
+    let years = d.getFullYear() - n.getFullYear()
+    if (d.getMonth() < n.getMonth() || (d.getMonth() === n.getMonth() && d.getDate() < n.getDate())) years--
+    return `${years} ano${years !== 1 ? 's' : ''}`
+  }
 
   return (
-    <>
-      <PrintTrigger />
-      <div style={{ padding: '0 0 24px 0' }}>
-        {/* Cabeçalho */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #004ac6', paddingBottom: '16px', marginBottom: '24px' }}>
-          <div>
-            <p style={{ fontSize: '10px', fontWeight: 700, color: '#004ac6', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '4px' }}>
-              {usuario?.escola?.nome ?? 'EduCare'}
-            </p>
-            <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#1B3A6B' }}>Lista de Alunos</h1>
-            <p style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-              {searchParams.turma ? `Turma: ${searchParams.turma}` : 'Todas as turmas'} · Gerado em {hoje}
-            </p>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '11px', color: '#666' }}>Total</p>
-            <p style={{ fontSize: '28px', fontWeight: 800, color: '#004ac6' }}>{lista.length}</p>
-            <p style={{ fontSize: '11px', color: '#666' }}>alunos ativos</p>
-          </div>
-        </div>
-
-        {/* Tabelas por turma */}
-        {Object.entries(porTurma).map(([turma, alunos]) => (
-          <div key={turma} style={{ marginBottom: '32px', pageBreakInside: 'avoid' }}>
-            <div style={{ background: '#1B3A6B', color: '#fff', padding: '8px 12px', borderRadius: '4px 4px 0 0', display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontWeight: 700, fontSize: '13px' }}>{turma}</span>
-              <span style={{ fontSize: '12px', opacity: 0.8 }}>{alunos.length} alunos</span>
+    <html lang="pt-BR">
+      <head>
+        <title>Lista de Alunos — {nomeEscola}</title>
+        <meta charSet="utf-8" />
+        <style>{`
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: Arial, sans-serif; font-size: 11px; color: #1e293b; background: white; }
+          .page { padding: 20px 24px; max-width: 800px; margin: 0 auto; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2563EB; padding-bottom: 12px; margin-bottom: 16px; }
+          .escola-nome { font-size: 16px; font-weight: 900; color: #1e293b; }
+          .escola-sub  { font-size: 10px; color: #64748b; margin-top: 2px; }
+          .titulo      { font-size: 13px; font-weight: 700; color: #2563EB; }
+          .turma-header { background: #EFF6FF; padding: 6px 10px; font-weight: 900; font-size: 12px; color: #1e40af; margin: 12px 0 4px; border-left: 3px solid #2563EB; }
+          table { width: 100%; border-collapse: collapse; }
+          th { background: #f8fafc; font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 5px 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          td { padding: 5px 8px; border-bottom: 1px solid #f1f5f9; font-size: 11px; }
+          tr:nth-child(even) td { background: #f8fafc; }
+          .assinatura { width: 120px; border-bottom: 1px solid #94a3b8; height: 14px; }
+          .footer { margin-top: 20px; font-size: 9px; color: #94a3b8; text-align: right; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+          .total { font-size: 10px; color: #64748b; text-align: right; margin-top: 4px; }
+          @media print { @page { margin: 15mm; } }
+        `}</style>
+      </head>
+      <body>
+        <div className="page">
+          <div className="header">
+            <div>
+              <div className="escola-nome">{nomeEscola}</div>
+              <div className="escola-sub">{config?.cidade && config?.estado ? `${config.cidade} — ${config.estado}` : ''} {config?.telefone ? `| ${config.telefone}` : ''}</div>
             </div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-              <thead>
-                <tr style={{ background: '#f0f4ff' }}>
-                  <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>#</th>
-                  <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Nome</th>
-                  <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Nascimento</th>
-                  <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Idade</th>
-                  <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#1B3A6B', borderBottom: '1px solid #e8e1dc' }}>Ass. Responsável</th>
-                </tr>
-              </thead>
-              <tbody>
-                {alunos.map((a, i) => (
-                  <tr key={a.id} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
-                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', color: '#999' }}>{i + 1}</td>
-                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', fontWeight: 600 }}>{a.nome}</td>
-                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', color: '#555' }}>
-                      {new Date(a.dt_nascimento).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8', color: '#555' }}>
-                      {calcIdade(a.dt_nascimento)}
-                    </td>
-                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f0ece8' }}>
-                      <div style={{ borderBottom: '1px solid #aaa', width: '120px', height: '20px' }} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div style={{ textAlign: 'right' }}>
+              <div className="titulo">Lista de Alunos{turmaParam ? ` — ${turmaParam}` : ''}</div>
+              <div className="escola-sub">Emitido em {hoje}</div>
+            </div>
           </div>
-        ))}
 
-        <div style={{ marginTop: '40px', borderTop: '1px solid #e8e1dc', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#999' }}>
-          <span>{usuario?.escola?.nome}</span>
-          <span>EduCare — Sistema de Gestão Escolar</span>
-          <span>{hoje}</span>
+          {Object.entries(porTurma).sort(([a],[b]) => a.localeCompare(b)).map(([turma, lista]) => (
+            <div key={turma}>
+              <div className="turma-header">{turma} — {lista.length} aluno{lista.length !== 1 ? 's' : ''}</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ width: '30px' }}>#</th>
+                    <th>Nome do Aluno</th>
+                    <th>Nascimento</th>
+                    <th>Idade</th>
+                    <th style={{ width: '140px' }}>Assinatura</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lista.map((a: any, i: number) => (
+                    <tr key={a.id}>
+                      <td style={{ color: '#94a3b8' }}>{i + 1}</td>
+                      <td style={{ fontWeight: 600 }}>{a.nome}</td>
+                      <td>{a.dt_nascimento ? a.dt_nascimento.split('-').reverse().join('/') : '—'}</td>
+                      <td style={{ color: '#64748b' }}>{calcIdade(a.dt_nascimento)}</td>
+                      <td><div className="assinatura" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+
+          <div className="total">Total geral: {filtrados.length} aluno{filtrados.length !== 1 ? 's' : ''}</div>
+          <div className="footer">Gerado pelo KTX Academy — Sistema de Gestão Escolar</div>
         </div>
-      </div>
-    </>
+      </body>
+    </html>
   )
-}
-
-function calcIdade(nasc: string) {
-  const hoje = new Date()
-  const n    = new Date(nasc)
-  let anos   = hoje.getFullYear() - n.getFullYear()
-  let meses  = hoje.getMonth() - n.getMonth()
-  if (meses < 0) { anos--; meses += 12 }
-  if (anos === 0) return `${meses}m`
-  if (meses === 0) return `${anos}a`
-  return `${anos}a ${meses}m`
 }

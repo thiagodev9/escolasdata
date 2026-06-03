@@ -10,8 +10,12 @@ export async function GET() {
 
     const admin = createClient()
     const { data: usuario } = await (admin as any)
-      .from('usuarios').select('escola_id').eq('id', user.id).single() as { data: { escola_id: string } | null }
-    if (!usuario) return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 })
+      .from('usuarios').select('escola_id, role').eq('id', user.id).single() as { data: { escola_id: string; role: string } | null }
+
+    // 🔐 Apenas diretora/super_admin podem ler config NFS-e (contém chave de API)
+    if (!usuario || !['diretora', 'super_admin'].includes(usuario.role)) {
+      return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
+    }
 
     const { data } = await (admin as any)
       .from('nfse_config').select('*').eq('escola_id', usuario.escola_id).maybeSingle()

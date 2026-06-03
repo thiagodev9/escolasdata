@@ -7,6 +7,7 @@ import {
   Settings, Rss, LogOut, ScanLine, MessageSquareDot,
   ClipboardList, BarChart3, FileText, Shield, Building2,
   ChevronLeft, ChevronRight, ChevronDown, UserCog, Receipt, ArrowLeftRight,
+  UtensilsCrossed, Banknote,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -55,13 +56,14 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Administrativo',
     key: 'administrativo',
     items: [
-      { label: 'Colaboradores',href: '/colaboradores',icon: UserCog,        roles: ['super_admin','diretora'],                                    color: 'text-sky-600',     bgActive: 'bg-sky-100' },
-      { label: 'Financeiro',  href: '/financeiro',  icon: DollarSign,      roles: ['super_admin','diretora'],                                    color: 'text-green-600',   bgActive: 'bg-green-100' },
-      { label: 'Gastos',      href: '/gastos',      icon: Receipt,         roles: ['super_admin','diretora'],                                    color: 'text-red-500',     bgActive: 'bg-red-50' },
-      { label: 'Importar/Exportar', href: '/importar', icon: ArrowLeftRight, roles: ['super_admin','diretora'],                                  color: 'text-indigo-500',  bgActive: 'bg-indigo-50' },
-      { label: 'Matrículas',  href: '/matriculas',  icon: ClipboardList,   roles: ['super_admin','diretora'],                                    color: 'text-orange-600',  bgActive: 'bg-orange-100' },
-      { label: 'Relatórios',  href: '/relatorios',  icon: BarChart3,       roles: ['super_admin','diretora','professora'],                       color: 'text-blue-500',    bgActive: 'bg-blue-50' },
-      { label: 'NFS-e',       href: '/nfse',        icon: FileText,        roles: ['super_admin','diretora'],                                    color: 'text-slate-500',   bgActive: 'bg-slate-100' },
+      { label: 'Colaboradores',    href: '/colaboradores', icon: UserCog,           roles: ['super_admin','diretora'],                color: 'text-sky-600',     bgActive: 'bg-sky-100' },
+      { label: 'Mensalidades',     href: '/mensalidades',  icon: Banknote,          roles: ['super_admin','diretora'],                color: 'text-green-600',   bgActive: 'bg-green-100' },
+      { label: 'Gastos',           href: '/gastos',        icon: Receipt,           roles: ['super_admin','diretora'],                color: 'text-red-500',     bgActive: 'bg-red-50' },
+      { label: 'Cardápio',         href: '/cardapio',      icon: UtensilsCrossed,   roles: ['super_admin','diretora','professora'],    color: 'text-orange-500',  bgActive: 'bg-orange-50' },
+      { label: 'Importar/Exportar',href: '/importar',      icon: ArrowLeftRight,    roles: ['super_admin','diretora'],                color: 'text-indigo-500',  bgActive: 'bg-indigo-50' },
+      { label: 'Matrículas',       href: '/matriculas',    icon: ClipboardList,     roles: ['super_admin','diretora'],                color: 'text-amber-600',   bgActive: 'bg-amber-100' },
+      { label: 'Relatórios',       href: '/relatorios',    icon: BarChart3,         roles: ['super_admin','diretora','professora'],    color: 'text-blue-500',    bgActive: 'bg-blue-50' },
+      { label: 'NFS-e',            href: '/nfse',          icon: FileText,          roles: ['super_admin','diretora'],                color: 'text-slate-500',   bgActive: 'bg-slate-100' },
     ],
   },
   {

@@ -137,6 +137,61 @@ export interface LgpdRequest {
   processado_em: string | null
 }
 
+export type MensalidadeStatus = 'pendente' | 'pago' | 'vencido' | 'isento'
+
+export interface Mensalidade {
+  id: string
+  escola_id: string
+  aluno_id: string
+  mes_referencia: string
+  valor: number
+  status: MensalidadeStatus
+  dt_vencimento: string | null
+  dt_pagamento: string | null
+  forma_pagamento: string | null
+  observacoes: string | null
+  criado_por: string | null
+  criado_em: string
+}
+
+export interface ConfiguracaoEscola {
+  id: string
+  escola_id: string
+  nome_fantasia: string | null
+  razao_social: string | null
+  cnpj: string | null
+  logo_url: string | null
+  cor_primaria: string | null
+  telefone: string | null
+  whatsapp: string | null
+  email_contato: string | null
+  site: string | null
+  cep: string | null
+  rua: string | null
+  numero: string | null
+  complemento: string | null
+  bairro: string | null
+  cidade: string | null
+  estado: string | null
+  horario_entrada: string | null
+  horario_saida: string | null
+  valor_mensalidade: number | null
+  dia_vencimento: number | null
+  diretor_nome: string | null
+  diretor_cpf: string | null
+  atualizado_em: string
+}
+
+export interface CardapioItem {
+  id: string
+  escola_id: string
+  semana_inicio: string
+  dia_semana: number
+  refeicao: string
+  descricao: string
+  criado_em: string
+}
+
 export interface AuditLog {
   id: string
   escola_id: string

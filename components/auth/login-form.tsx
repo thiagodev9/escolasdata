@@ -154,6 +154,7 @@ export function LoginForm() {
             <Input id="senha" type={showSenha ? 'text' : 'password'} placeholder="••••••••" value={senha}
               onChange={(e) => setSenha(e.target.value)} className="pl-10 pr-10" required autoComplete="current-password" />
             <button type="button" onClick={() => setShowSenha(v => !v)}
+              aria-label={showSenha ? 'Ocultar senha' : 'Mostrar senha'}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
               {showSenha ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
