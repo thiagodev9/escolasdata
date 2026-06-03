@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Plus, Search, X, Loader2, User, Phone, Trash2, UserPlus, AlertTriangle } from 'lucide-react'
+import { Plus, Search, X, Loader2, User, Phone, Mail, Trash2, UserPlus, AlertTriangle, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,14 +19,15 @@ interface Aluno {
 }
 interface AlunosClientProps { alunos: Aluno[]; turmas: Turma[]; escolaId: string }
 
-interface Responsavel { nome: string; telefone: string }
-const RESP_VAZIO: Responsavel = { nome: '', telefone: '' }
+interface Responsavel { nome: string; telefone: string; email: string }
+const RESP_VAZIO: Responsavel = { nome: '', telefone: '', email: '' }
 
 interface RespEdit {
   ar_id: string | null        // alunos_responsaveis.id (null = novo)
   responsavel_id: string | null
   nome: string
   telefone: string
+  email: string
 }
 type FormStatus = 'ativo' | 'pendente' | 'inativo'
 interface AlunoForm { nome: string; dt_nascimento: string; status: FormStatus; turma_id: string }
@@ -83,6 +84,7 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
     resps.forEach((r, i) => {
       if (!r.nome.trim())     novos[`resp_${i}_nome`]     = 'Nome do responsável é obrigatório'
       if (!r.telefone.trim()) novos[`resp_${i}_telefone`] = 'Contato é obrigatório'
+      if (!r.email.trim())    novos[`resp_${i}_email`]    = 'E-mail é obrigatório'
     })
     setErros(novos)
     return Object.keys(novos).length === 0
@@ -109,7 +111,7 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
         const r = resps[i]
         const { data: resp, error: errR } = await sb
           .from('responsaveis')
-          .insert({ nome: r.nome.trim(), telefone: r.telefone.trim(), escola_id: escolaId })
+          .insert({ nome: r.nome.trim(), telefone: r.telefone.trim(), email: r.email.trim() || null, escola_id: escolaId })
           .select().single()
         if (errR) throw errR
         await sb.from('alunos_responsaveis').insert({
@@ -144,9 +146,8 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
     const sb = supabase as any
     const { data, error } = await sb
       .from('alunos_responsaveis')
-      .select('responsavel_id, principal, responsaveis(id, nome, telefone)')
+      .select('responsavel_id, responsaveis(id, nome, telefone, email)')
       .eq('aluno_id', aluno.id)
-      .order('principal', { ascending: false })
 
     if (!error && data && data.length > 0) {
       setEditResps(data.map((ar: any) => ({
@@ -154,10 +155,11 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
         responsavel_id: ar.responsavel_id,
         nome:           ar.responsaveis?.nome ?? '',
         telefone:       ar.responsaveis?.telefone ?? '',
+        email:          ar.responsaveis?.email ?? '',
       })))
     } else {
       // Nenhum responsável vinculado — inicia com um campo vazio
-      setEditResps([{ ar_id: null, responsavel_id: null, nome: '', telefone: '' }])
+      setEditResps([{ ar_id: null, responsavel_id: null, nome: '', telefone: '', email: '' }])
     }
     setEditRespsLoading(false)
   }
@@ -173,13 +175,13 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
     setEditErros(e => { const n = { ...e }; delete n[key]; return n })
   }
 
-  function campoEditResp(idx: number, key: 'nome' | 'telefone', val: string) {
+  function campoEditResp(idx: number, key: 'nome' | 'telefone' | 'email', val: string) {
     setEditResps(r => r.map((item, i) => i === idx ? { ...item, [key]: val } : item))
     setEditErros(e => { const n = { ...e }; delete n[`er_${idx}_${key}`]; return n })
   }
 
   function adicionarEditResp() {
-    setEditResps(r => [...r, { ar_id: null, responsavel_id: null, nome: '', telefone: '' }])
+    setEditResps(r => [...r, { ar_id: null, responsavel_id: null, nome: '', telefone: '', email: '' }])
   }
 
   function removerEditResp(idx: number) {
@@ -194,6 +196,7 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
     editResps.forEach((r, i) => {
       if (!r.nome.trim())     novos[`er_${i}_nome`]     = 'Nome é obrigatório'
       if (!r.telefone.trim()) novos[`er_${i}_telefone`] = 'Contato é obrigatório'
+      if (!r.email.trim())    novos[`er_${i}_email`]    = 'E-mail é obrigatório'
     })
     setEditErros(novos)
     return Object.keys(novos).length === 0
@@ -232,13 +235,13 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
         if (respId) {
           // Atualiza responsável existente
           await sb.from('responsaveis')
-            .update({ nome: r.nome.trim(), telefone: r.telefone.trim() })
+            .update({ nome: r.nome.trim(), telefone: r.telefone.trim(), email: r.email.trim() || null })
             .eq('id', respId)
         } else {
           // Cria novo responsável
           const { data: novo, error: errR } = await sb
             .from('responsaveis')
-            .insert({ nome: r.nome.trim(), telefone: r.telefone.trim(), escola_id: escolaId })
+            .insert({ nome: r.nome.trim(), telefone: r.telefone.trim(), email: r.email.trim() || null, escola_id: escolaId })
             .select().single()
           if (errR) throw errR
           respId = novo.id
@@ -444,6 +447,16 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
                         </div>
                         {erros[`resp_${idx}_telefone`] && <p className="text-xs text-red-500">{erros[`resp_${idx}_telefone`]}</p>}
                       </div>
+                      <div className="space-y-1">
+                        <Label className="font-bold text-slate-700 text-sm">E-mail *</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                          <Input type="email" placeholder="nome@email.com" value={r.email}
+                            onChange={e => campoResp(idx, 'email', e.target.value)}
+                            className={`pl-10 ${erros[`resp_${idx}_email`] ? 'border-red-400' : ''}`} />
+                        </div>
+                        {erros[`resp_${idx}_email`] && <p className="text-xs text-red-500">{erros[`resp_${idx}_email`]}</p>}
+                      </div>
                     </div>
                   ))}
 
@@ -580,6 +593,16 @@ export function AlunosClient({ alunos, turmas, escolaId }: AlunosClientProps) {
                                 className={`pl-10 ${editErros[`er_${idx}_telefone`] ? 'border-red-400' : ''}`} />
                             </div>
                             {editErros[`er_${idx}_telefone`] && <p className="text-xs text-red-500">{editErros[`er_${idx}_telefone`]}</p>}
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="font-bold text-slate-700 text-sm">E-mail *</Label>
+                            <div className="relative">
+                              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                              <Input type="email" placeholder="nome@email.com" value={r.email}
+                                onChange={e => campoEditResp(idx, 'email', e.target.value)}
+                                className={`pl-10 ${editErros[`er_${idx}_email`] ? 'border-red-400' : ''}`} />
+                            </div>
+                            {editErros[`er_${idx}_email`] && <p className="text-xs text-red-500">{editErros[`er_${idx}_email`]}</p>}
                           </div>
                         </div>
                       ))}

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
 import type { Role, Usuario } from '@/lib/supabase/types'
 
@@ -9,35 +10,48 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!user) redirect('/login')
 
+  const admin = createAdmin()
 
-  const { data: usuario } = await (supabase as any)
+  let usuario: (Usuario & { escola: { nome: string } | null }) | null = null
+
+  const { data: u } = await (supabase as any)
     .from('usuarios')
     .select('*, escola:escolas(*)')
     .eq('id', user.id)
     .single() as { data: (Usuario & { escola: { nome: string } | null }) | null }
 
-  // Se usuario não encontrado mas está autenticado, pode ser RLS bloqueando.
-  // Usar service role para buscar o perfil sem RLS.
-  if (!usuario) {
-    const { createClient: createAdmin } = await import('@/lib/supabase/admin')
-    const admin = createAdmin()
-    const { data: usuarioAdmin } = await (admin as any)
+  if (!u) {
+    const { data: uAdmin } = await (admin as any)
       .from('usuarios')
       .select('*, escola:escolas(*)')
       .eq('id', user.id)
       .single() as { data: (Usuario & { escola: { nome: string } | null }) | null }
-    if (!usuarioAdmin) redirect('/login')
-    return (
-      <div className="flex h-screen overflow-hidden bg-background">
-        <Sidebar role={usuarioAdmin.role as Role} escolaNome={usuarioAdmin.escola?.nome ?? ''} usuario={usuarioAdmin} />
-        <main className="flex-1 overflow-y-auto">{children}</main>
-      </div>
-    )
+    if (!uAdmin) redirect('/login')
+    usuario = uAdmin
+  } else {
+    usuario = u
   }
+
+  // Busca logo e nome fantasia das configurações da escola
+  const { data: config } = await (admin as any)
+    .from('configuracoes_escola')
+    .select('logo_url, nome_fantasia, cor_primaria')
+    .eq('escola_id', usuario.escola_id)
+    .maybeSingle() as { data: { logo_url: string | null; nome_fantasia: string | null; cor_primaria: string | null } | null }
+
+  const escolaNome = config?.nome_fantasia || usuario.escola?.nome || ''
+  const logoUrl    = config?.logo_url    ?? null
+  const corPrimaria = config?.cor_primaria ?? '#2563EB'
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar role={usuario.role as Role} escolaNome={usuario.escola?.nome ?? ''} usuario={usuario} />
+      <Sidebar
+        role={usuario.role as Role}
+        escolaNome={escolaNome}
+        logoUrl={logoUrl}
+        corPrimaria={corPrimaria}
+        usuario={usuario}
+      />
       <main className="flex-1 overflow-y-auto">
         {children}
       </main>

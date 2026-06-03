@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Logo Escola Base</title></head>
+<body style="background:#f0f0f0;display:flex;flex-direction:column;align-items:center;padding:40px;font-family:Arial">
+  <h2>Logo Escola Base — clique com botão direito → Salvar imagem</h2>
+  <canvas id="c" width="400" height="400" style="border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.2)"></canvas>
+  <br>
+  <a id="dl" download="logo-escola-base.png" style="margin-top:16px;padding:12px 24px;background:#4F46E5;color:white;border-radius:8px;text-decoration:none;font-weight:bold">
+    ⬇ Baixar PNG
+  </a>
+  <script>
+    const c = document.getElementById('c');
+    const ctx = c.getContext('2d');
+    const w = 400, h = 400;
+
+    // Fundo gradiente
+    const bg = ctx.createLinearGradient(0,0,w,h);
+    bg.addColorStop(0, '#4F46E5');
+    bg.addColorStop(1, '#7C3AED');
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 195, 0, Math.PI*2);
+    ctx.fillStyle = bg;
+    ctx.fill();
+
+    // Borda sutil
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, 185, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Estrelinhas
+    [[80,90,5],[320,80,4],[60,300,3],[340,310,5],[110,340,3],[300,340,4]].forEach(([x,y,r])=>{
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.fill();
+    });
+
+    // Corpo da casa (branco)
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.roundRect(120, 173, 160, 115, 6);
+    ctx.fill();
+
+    // Telhado
+    const roof = ctx.createLinearGradient(110,100,290,175);
+    roof.addColorStop(0,'#F59E0B'); roof.addColorStop(1,'#F97316');
+    ctx.fillStyle = roof;
+    ctx.beginPath(); ctx.moveTo(200,100); ctx.lineTo(110,175); ctx.lineTo(290,175); ctx.closePath(); ctx.fill();
+
+    // Chaminé
+    ctx.fillStyle = '#F97316';
+    ctx.beginPath(); ctx.roundRect(240,118,22,38,3); ctx.fill();
+
+    // Janela esquerda
+    ctx.fillStyle = '#E0E7FF';
+    ctx.beginPath(); ctx.roundRect(138,195,42,38,5); ctx.fill();
+    ctx.strokeStyle = '#4F46E5'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.roundRect(138,195,42,38,5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(159,195); ctx.lineTo(159,233); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(138,214); ctx.lineTo(180,214); ctx.stroke();
+
+    // Janela direita
+    ctx.fillStyle = '#E0E7FF';
+    ctx.beginPath(); ctx.roundRect(220,195,42,38,5); ctx.fill();
+    ctx.strokeStyle = '#4F46E5'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.roundRect(220,195,42,38,5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(241,195); ctx.lineTo(241,233); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(220,214); ctx.lineTo(262,214); ctx.stroke();
+
+    // Porta
+    ctx.fillStyle = '#4F46E5';
+    ctx.beginPath(); ctx.roundRect(172,238,56,50,6); ctx.fill();
+    ctx.fillStyle = '#F59E0B';
+    ctx.beginPath(); ctx.arc(220,263,4,0,Math.PI*2); ctx.fill();
+
+    // Texto ESCOLA
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 34px Arial';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '6px';
+    ctx.fillText('ESCOLA', 200, 332);
+
+    // Texto BASE
+    ctx.fillStyle = '#F59E0B';
+    ctx.fillText('BASE', 200, 368);
+
+    // Link download
+    document.getElementById('dl').href = c.toDataURL('image/png');
+  </script>
+</body>
+</html>

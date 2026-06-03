@@ -12,7 +12,7 @@ export default async function AlunosPage() {
 
   const escolaId = usuario?.escola_id ?? ''
 
-  const [alunosRes, turmasRes, respsRes] = await Promise.all([
+  const [alunosRes, turmasRes] = await Promise.all([
     (admin as any)
       .from('alunos')
       .select('*, alunos_turmas(turma:turmas(id, nome))')
@@ -23,16 +23,20 @@ export default async function AlunosPage() {
       .select('id, nome')
       .eq('escola_id', escolaId)
       .order('nome'),
-    (admin as any)
-      .from('alunos_responsaveis')
-      .select('aluno_id, principal, responsaveis(nome, telefone)')
-      .eq('responsaveis.escola_id', escolaId),
   ])
 
-  // Monta mapa aluno_id -> responsável principal
+  const alunoIds = (alunosRes.data ?? []).map((a: any) => a.id)
+  const respsRes = alunoIds.length > 0
+    ? await (admin as any)
+        .from('alunos_responsaveis')
+        .select('aluno_id, responsaveis(nome, telefone)')
+        .in('aluno_id', alunoIds)
+    : { data: [] }
+
+  // Monta mapa aluno_id -> primeiro responsável encontrado
   const respMap: Record<string, { nome: string; telefone: string }> = {}
   for (const ar of (respsRes.data ?? [])) {
-    if (!respMap[ar.aluno_id] || ar.principal) {
+    if (!respMap[ar.aluno_id]) {
       respMap[ar.aluno_id] = {
         nome:     ar.responsaveis?.nome     ?? '',
         telefone: ar.responsaveis?.telefone ?? '',

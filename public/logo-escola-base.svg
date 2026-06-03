@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="roofGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F97316;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fundo circular -->
+  <circle cx="200" cy="200" r="195" fill="url(#bgGrad)" />
+  <circle cx="200" cy="200" r="185" fill="none" stroke="white" stroke-width="3" stroke-opacity="0.2" />
+
+  <!-- Estrelinhas decorativas -->
+  <circle cx="80"  cy="90"  r="5" fill="white" opacity="0.4"/>
+  <circle cx="320" cy="80"  r="4" fill="white" opacity="0.3"/>
+  <circle cx="60"  cy="300" r="3" fill="white" opacity="0.3"/>
+  <circle cx="340" cy="310" r="5" fill="white" opacity="0.4"/>
+  <circle cx="110" cy="340" r="3" fill="white" opacity="0.25"/>
+  <circle cx="300" cy="340" r="4" fill="white" opacity="0.3"/>
+
+  <!-- Casa / Escola -->
+  <!-- Telhado -->
+  <polygon points="200,100 110,175 290,175" fill="url(#roofGrad)" />
+  <!-- Chaminé -->
+  <rect x="240" y="118" width="22" height="38" rx="3" fill="#F97316" />
+
+  <!-- Corpo da casa -->
+  <rect x="120" y="173" width="160" height="115" rx="6" fill="white" />
+
+  <!-- Janela esquerda -->
+  <rect x="138" y="195" width="42" height="38" rx="5" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <line x1="159" y1="195" x2="159" y2="233" stroke="#4F46E5" stroke-width="2"/>
+  <line x1="138" y1="214" x2="180" y2="214" stroke="#4F46E5" stroke-width="2"/>
+
+  <!-- Janela direita -->
+  <rect x="220" y="195" width="42" height="38" rx="5" fill="#E0E7FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <line x1="241" y1="195" x2="241" y2="233" stroke="#4F46E5" stroke-width="2"/>
+  <line x1="220" y1="214" x2="262" y2="214" stroke="#4F46E5" stroke-width="2"/>
+
+  <!-- Porta -->
+  <rect x="172" y="238" width="56" height="50" rx="6" fill="#4F46E5" />
+  <circle cx="220" cy="263" r="4" fill="#F59E0B" />
+
+  <!-- Texto ESCOLA -->
+  <text x="200" y="332"
+        font-family="Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="34"
+        fill="white"
+        text-anchor="middle"
+        letter-spacing="6">ESCOLA</text>
+
+  <!-- Texto BASE -->
+  <text x="200" y="368"
+        font-family="Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="34"
+        fill="#F59E0B"
+        text-anchor="middle"
+        letter-spacing="10">BASE</text>
+</svg>

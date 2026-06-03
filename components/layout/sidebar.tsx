@@ -94,10 +94,12 @@ const ROLE_BADGE: Record<Role, string> = {
 interface SidebarProps {
   role: Role
   escolaNome: string
+  logoUrl: string | null
+  corPrimaria: string
   usuario: Usuario
 }
 
-export function Sidebar({ role, escolaNome, usuario }: SidebarProps) {
+export function Sidebar({ role, escolaNome, logoUrl, corPrimaria, usuario }: SidebarProps) {
   const pathname = usePathname()
   const router   = useRouter()
   const supabase = createClient()
@@ -158,27 +160,31 @@ export function Sidebar({ role, escolaNome, usuario }: SidebarProps) {
         collapsed ? 'w-[72px]' : 'w-[256px]'
       )}
     >
-      {/* ── Logo KTX ── */}
+      {/* ── Logo da escola ── */}
       <div className={cn(
         'flex items-center border-b border-slate-100 shrink-0',
         collapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4 gap-3'
       )}>
-        {/* Ícone KTX — quadrado escuro com texto */}
-        <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden" style={{ background: '#2563EB' }}>
-          <span
-            className="absolute inset-0 flex items-center justify-center font-black text-white tracking-tight leading-none"
-            style={{ fontSize: '13px', letterSpacing: '-0.5px' }}
-          >
-            KTX
-          </span>
-          {/* ponto laranja de acento */}
-          <span className="absolute bottom-1 right-1 w-2 h-2 rounded-full bg-orange-400" />
+        <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden" style={{ background: corPrimaria }}>
+          {logoUrl ? (
+            <img src={logoUrl} alt={escolaNome} className="w-full h-full object-cover" />
+          ) : (
+            <>
+              <span
+                className="absolute inset-0 flex items-center justify-center font-black text-white tracking-tight leading-none"
+                style={{ fontSize: '13px', letterSpacing: '-0.5px' }}
+              >
+                {escolaNome ? escolaNome.slice(0, 2).toUpperCase() : 'EB'}
+              </span>
+              <span className="absolute bottom-1 right-1 w-2 h-2 rounded-full bg-orange-400" />
+            </>
+          )}
         </div>
 
         {!collapsed && (
           <div className="min-w-0 overflow-hidden">
             <p className="text-base font-black text-slate-800 leading-tight truncate">
-              KTX Academy
+              {escolaNome || 'Minha Escola'}
             </p>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
               Portal Pré-Escolar
