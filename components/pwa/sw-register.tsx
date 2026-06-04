@@ -42,7 +42,7 @@ export function SwRegister() {
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm">
       <div className="bg-white rounded-2xl shadow-modal border border-slate-100 p-4 flex items-center gap-3">
-        {/* Ícone KTX */}
+        {/* Ícone KTX Digital */}
         <div
           className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: '#2563EB' }}
@@ -51,7 +51,7 @@ export function SwRegister() {
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-slate-800">Instalar KTX Academy</p>
+          <p className="text-sm font-bold text-slate-800">Instalar EduNest</p>
           <p className="text-xs text-slate-500">Acesso rápido, funciona offline</p>
         </div>
 

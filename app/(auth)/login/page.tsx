@@ -1,4 +1,4 @@
-﻿import { Suspense } from 'react'
+import { Suspense } from 'react'
 import { LoginForm } from '@/components/auth/login-form'
 import { Footprints, Heart, Star } from 'lucide-react'
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
         </div>
 
         <footer className="absolute bottom-4 text-center w-full text-xs text-slate-400">
-          © 2024 EduNest · Portal Pré-Escolar · Todos os direitos reservados
+          © {new Date().getFullYear()} KTX Digital · EduNest · Todos os direitos reservados
         </footer>
       </div>
     </main>

@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import {
   Users, Calendar, CreditCard, MessageSquare, UtensilsCrossed,
   BarChart3, Shield, Smartphone, CheckCircle2, Star, ArrowRight,
@@ -712,7 +712,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="footer-bottom">
-            <span className="footer-copy">© {new Date().getFullYear()} EduNest. Todos os direitos reservados.</span>
+            <span className="footer-copy">© {new Date().getFullYear()} KTX Digital. Todos os direitos reservados.</span>
             <span className="footer-copy" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               Feito com <Heart size={12} style={{ color: '#e11d48' }} /> para educação infantil
             </span>

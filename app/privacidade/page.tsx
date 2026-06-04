@@ -1,4 +1,4 @@
-﻿import { GraduationCap, Shield } from 'lucide-react'
+import { GraduationCap, Shield } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
@@ -27,7 +27,7 @@ export default function PrivacidadePage() {
           <p className="text-sm text-gray-500 mb-6">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
 
           <Section title="1. Quem somos">
-            <p>O <strong>EduNest</strong> é uma plataforma SaaS de gestão para escolas infantis, operada por cada estabelecimento de ensino que utiliza o sistema. Esta política se aplica ao tratamento de dados realizado pelas escolas usuárias do EduNest e pelo próprio sistema.</p>
+            <p>O <strong>EduNest</strong> é uma plataforma SaaS de gestão para escolas infantis desenvolvida pela <strong>KTX Digital</strong>, operada por cada estabelecimento de ensino que a utiliza. Esta política se aplica ao tratamento de dados realizado pelas escolas usuárias do EduNest e pela KTX Digital enquanto operadora da plataforma.</p>
           </Section>
 
           <Section title="2. Base legal (LGPD)">

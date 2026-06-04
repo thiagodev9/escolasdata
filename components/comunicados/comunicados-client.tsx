@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Send, MessageSquare, Clock, Users, CheckCircle2, AlertCircle, Loader2, Zap } from 'lucide-react'

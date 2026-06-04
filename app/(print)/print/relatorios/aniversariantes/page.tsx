@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+﻿import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 
@@ -133,7 +133,7 @@ export default async function PrintAniversariantesPage({
               </div>
           }
 
-          <div className="footer">Gerado pelo KTX Academy — Sistema de Gestão Escolar</div>
+          <div className="footer">Gerado pelo EduNest — Sistema de Gestão Escolar</div>
         </div>
       </body>
     </html>

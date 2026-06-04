@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/admin'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { emitirNfse, gerarXmlAbrasf } from '@/lib/nfse/client'
@@ -111,7 +111,9 @@ export async function POST(request: NextRequest) {
           },
         }
 
-        const result = await emitirNfse('company-id-from-nfeio', payload, config.nfeio_api_key)
+        const nfeioCompanyId = process.env.NFEIO_COMPANY_ID
+        if (!nfeioCompanyId) throw new Error('NFEIO_COMPANY_ID não configurado')
+        const result = await emitirNfse(nfeioCompanyId, payload, config.nfeio_api_key)
 
         await (admin as any).from('nfse_emitidas').update({
           status:      result.status === 'Issued' ? 'emitida' : 'pendente',

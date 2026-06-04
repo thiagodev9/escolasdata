@@ -108,7 +108,8 @@ export async function POST(request: NextRequest) {
         }
 
         criados++
-      } catch {
+      } catch (rowErr: any) {
+        console.error(`[import-csv] erro na linha "${row.nome}":`, rowErr?.message)
         erros++
       }
     }

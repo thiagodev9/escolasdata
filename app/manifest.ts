@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'KTX Academy — Portal Pré-Escolar',
-    short_name: 'KTX Academy',
+    name: 'EduNest — Portal Pré-Escolar',
+    short_name: 'EduNest',
     description: 'Plataforma de gestão para escolas infantis',
     start_url: '/dashboard',
     display: 'standalone',

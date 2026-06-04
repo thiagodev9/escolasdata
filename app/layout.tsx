@@ -4,13 +4,13 @@ import { LgpdBanner } from '@/components/lgpd/lgpd-banner'
 import { SwRegister } from '@/components/pwa/sw-register'
 
 export const metadata: Metadata = {
-  title: 'KTX Academy — Portal Pré-Escolar',
+  title: 'EduNest — Portal Pré-Escolar',
   description: 'Plataforma de gestão para escolas infantis',
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'KTX Academy',
+    title: 'EduNest',
   },
   icons: {
     icon:  [{ url: '/icons/192', sizes: '192x192', type: 'image/png' }],
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* PWA iOS */}
         <meta name="apple-mobile-web-app-capable"           content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style"  content="default" />
-        <meta name="apple-mobile-web-app-title"             content="KTX Academy" />
+        <meta name="apple-mobile-web-app-title"             content="EduNest" />
         <link rel="apple-touch-icon"                        href="/icons/192" />
         {/* PWA Android / Chrome */}
         <meta name="theme-color" content="#2563EB" />

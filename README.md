@@ -1,4 +1,4 @@
-﻿# EduNest Core
+# EduNest Core
 
 EduNest Core is a modern management system for Brazilian preschools, designed to balance institutional reliability with the nurturing warmth essential to early childhood education.
 

@@ -15,7 +15,7 @@ export default async function AlunosPage() {
   const [alunosRes, turmasRes] = await Promise.all([
     (admin as any)
       .from('alunos')
-      .select('*, alunos_turmas(turma:turmas(id, nome))')
+      .select('*, alunos_turmas(turma:turmas(id, nome)), alunos_responsaveis(responsaveis(nome, telefone))')
       .eq('escola_id', escolaId)
       .order('nome'),
     (admin as any)
@@ -25,32 +25,16 @@ export default async function AlunosPage() {
       .order('nome'),
   ])
 
-  const alunoIds = (alunosRes.data ?? []).map((a: any) => a.id)
-  const respsRes = alunoIds.length > 0
-    ? await (admin as any)
-        .from('alunos_responsaveis')
-        .select('aluno_id, responsaveis(nome, telefone)')
-        .in('aluno_id', alunoIds)
-    : { data: [] }
-
-  // Monta mapa aluno_id -> primeiro responsável encontrado
-  const respMap: Record<string, { nome: string; telefone: string }> = {}
-  for (const ar of (respsRes.data ?? [])) {
-    if (!respMap[ar.aluno_id]) {
-      respMap[ar.aluno_id] = {
-        nome:     ar.responsaveis?.nome     ?? '',
-        telefone: ar.responsaveis?.telefone ?? '',
-      }
+  const alunos = (alunosRes.data ?? []).map((a: any) => {
+    const resp = a.alunos_responsaveis?.[0]?.responsaveis
+    return {
+      ...a,
+      turma_nome:       a.alunos_turmas?.[0]?.turma?.nome ?? null,
+      turma_id:         a.alunos_turmas?.[0]?.turma?.id   ?? null,
+      responsavel_nome: resp?.nome     ?? null,
+      responsavel_tel:  resp?.telefone ?? null,
     }
-  }
-
-  const alunos = (alunosRes.data ?? []).map((a: any) => ({
-    ...a,
-    turma_nome:       a.alunos_turmas?.[0]?.turma?.nome ?? null,
-    turma_id:         a.alunos_turmas?.[0]?.turma?.id   ?? null,
-    responsavel_nome: respMap[a.id]?.nome     ?? null,
-    responsavel_tel:  respMap[a.id]?.telefone ?? null,
-  }))
+  })
 
   return (
     <div className="p-6 lg:p-10">

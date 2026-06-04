@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useTransition, useRef, useEffect, useCallback } from 'react'
 import { QRCodeSVG } from 'qrcode.react'

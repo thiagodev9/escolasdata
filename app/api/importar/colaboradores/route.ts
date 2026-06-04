@@ -40,7 +40,10 @@ export async function POST(request: NextRequest) {
           ativo:        true,
         })
         criados++
-      } catch { erros++ }
+      } catch (rowErr: any) {
+        console.error(`[importar-colaboradores] erro na linha "${row.nome}":`, rowErr?.message)
+        erros++
+      }
     }
 
     return NextResponse.json({ criados, erros })

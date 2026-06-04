@@ -1,4 +1,4 @@
-﻿const BASE = process.env.EVOLUTION_API_URL  ?? ''
+const BASE = process.env.EVOLUTION_API_URL  ?? ''
 const KEY  = process.env.EVOLUTION_API_KEY  ?? ''
 const INSTANCE = process.env.EVOLUTION_INSTANCE ?? 'EduNest'
 
@@ -10,16 +10,18 @@ async function post(path: string, body: object) {
     headers: { 'Content-Type': 'application/json', apikey: KEY },
     body: JSON.stringify(body),
   })
-  if (!res.ok) throw new Error(`Evolution ${res.status}: ${await res.text()}`)
+  if (!res.ok) {
+    const detail = (await res.text()).slice(0, 200)
+    throw new Error(`Evolution API ${res.status}: ${detail}`)
+  }
   return res.json()
 }
 
 // Normaliza telefone para formato WhatsApp (5511999999999)
 function normalizePhone(tel: string): string {
   const digits = tel.replace(/\D/g, '')
-  if (digits.startsWith('55')) return digits
-  if (digits.length === 11) return `55${digits}`
-  if (digits.length === 10) return `55${digits}`
+  if (digits.startsWith('55') && digits.length >= 12) return digits
+  if (digits.length === 11 || digits.length === 10) return `55${digits}`
   return digits
 }
 

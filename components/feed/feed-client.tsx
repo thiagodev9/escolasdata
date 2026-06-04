@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useTransition, useRef } from 'react'
 import { Plus, Heart, MessageCircle, Share2, X, Loader2, ImagePlus } from 'lucide-react'

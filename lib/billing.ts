@@ -1,4 +1,4 @@
-﻿// Tabela de preços por aluno ativo/mês
+// Tabela de preços por aluno ativo/mês
 const FAIXAS = [
   { ate: 30,       preco: 4.90, minimo: 97.00 },
   { ate: 80,       preco: 3.90, minimo: 0     },

@@ -2,7 +2,7 @@ import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import {
   Users, BookOpen, AlertTriangle, Star,
-  Plus, MessageSquare, DollarSign, ChevronRight,
+  MessageSquare, DollarSign, ChevronRight,
   Clock, CalendarDays, TrendingUp, Sparkles,
 } from 'lucide-react'
 import { StatCard } from '@/components/dashboard/stat-card'
@@ -72,8 +72,8 @@ export default async function DashboardPage() {
         </div>
         <div className="hidden md:flex items-center gap-2 bg-white rounded-2xl px-4 py-2.5 shadow-soft border border-slate-100">
           <Sparkles className="w-4 h-4 text-amber-400" />
-          <span className="text-sm font-bold text-slate-700">NPS 9.8</span>
-          <span className="text-xs text-emerald-500 font-semibold">Excelente</span>
+          <span className="text-sm font-bold text-slate-700">{stats.totalAlunos} alunos</span>
+          <span className="text-xs text-emerald-500 font-semibold">ativos</span>
         </div>
       </div>
 
@@ -101,10 +101,9 @@ export default async function DashboardPage() {
           iconColor="kpi-icon-orange"
         />
         <StatCard
-          label="NPS Médio"
-          value="9.8"
+          label="Posts no Feed"
+          value={stats.totalPosts}
           icon={Star}
-          status="excelente"
           iconColor="kpi-icon-purple"
         />
       </div>

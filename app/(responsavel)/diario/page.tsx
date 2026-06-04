@@ -23,25 +23,6 @@ export default async function DiarioPage() {
     .limit(1) as { data: any[] | null }
 
   const aluno = alunos?.[0]
-  const turma = aluno?.alunos_turmas?.[0]?.turma?.nome ?? 'Turma'
-
-  const hoje = new Date()
-  const dataFormatada = hoje.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
-  const diaSemana = hoje.toLocaleDateString('pt-BR', { weekday: 'long' })
-    .replace(/^\w/, c => c.toUpperCase())
-
-  const { data: registros } = await (admin as any)
-    .from('registros_diarios')
-    .select('*')
-    .eq('aluno_id', aluno?.id)
-    .eq('data', hoje.toISOString().split('T')[0])
-    .order('hora') as { data: any[] | null }
-
-  const refeicoes  = registros?.filter(r => r.tipo === 'refeicao') ?? []
-  const sonos      = registros?.filter(r => r.tipo === 'sono')     ?? []
-  const fraldas    = registros?.filter(r => r.tipo === 'fralda')   ?? []
-  const atividades = registros?.filter(r => r.tipo === 'atividade')?.slice(0, 1) ?? []
-  const recados    = registros?.filter(r => r.tipo === 'recado')   ?? []
 
   if (!aluno) {
     return (
@@ -51,6 +32,26 @@ export default async function DiarioPage() {
       </div>
     )
   }
+
+  const turma = aluno.alunos_turmas?.[0]?.turma?.nome ?? 'Turma'
+
+  const hoje = new Date()
+  const dataFormatada = hoje.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  const diaSemana = hoje.toLocaleDateString('pt-BR', { weekday: 'long' })
+    .replace(/^\w/, c => c.toUpperCase())
+
+  const { data: registros } = await (admin as any)
+    .from('registros_diarios')
+    .select('*')
+    .eq('aluno_id', aluno.id)
+    .eq('data', hoje.toISOString().split('T')[0])
+    .order('hora') as { data: any[] | null }
+
+  const refeicoes  = registros?.filter(r => r.tipo === 'refeicao') ?? []
+  const sonos      = registros?.filter(r => r.tipo === 'sono')     ?? []
+  const fraldas    = registros?.filter(r => r.tipo === 'fralda')   ?? []
+  const atividades = registros?.filter(r => r.tipo === 'atividade')?.slice(0, 1) ?? []
+  const recados    = registros?.filter(r => r.tipo === 'recado')   ?? []
 
   return (
     <div className="bg-background min-h-screen">

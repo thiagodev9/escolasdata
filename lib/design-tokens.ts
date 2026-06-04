@@ -1,4 +1,4 @@
-﻿/**
+/**
  * EduNest Design System — Tokens
  *
  * Paleta: Verde Sálvia (primário) + Âmbar Mel (acento)

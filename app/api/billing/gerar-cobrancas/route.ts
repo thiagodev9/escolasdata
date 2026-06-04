@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
         qtd_alunos:       total,
         valor,
         asaas_payment_id: asaasPaymentId,
-        status:           asaasPaymentId ? 'pendente' : 'pendente',
+        status:           asaasPaymentId ? 'pendente' : 'nao_enviada',
       })
 
       resultados.push({

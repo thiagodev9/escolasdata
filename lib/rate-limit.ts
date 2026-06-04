@@ -1,5 +1,6 @@
-// Rate limiter em memória — adequado para instância única (Vercel serverless por rota)
-// Para múltiplas instâncias em produção, substituir por Redis/Upstash.
+// Rate limiter em memória — funciona por worker/instância do Node.
+// No Vercel Edge cada instância é isolada; para proteção real em produção use Upstash Redis.
+// Para uso atual (rotas de auth com baixo volume) é suficiente como camada extra.
 
 interface RateLimitEntry {
   count: number
