@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/admin'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { emitirNfse, gerarXmlAbrasf } from '@/lib/nfse/client'
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         municipioIbge:        config?.municipio_ibge ?? '3550308',
         codigoServico:        config?.codigo_servico ?? '8.01',
         rpsNumero:            Date.now(),
-        rpsSerie:             'EduCare',
+        rpsSerie:             'EduNest',
       })
 
       await (admin as any).from('nfse_emitidas').update({
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       municipioIbge:        config.municipio_ibge ?? '3550308',
       codigoServico:        config.codigo_servico,
       rpsNumero:            Date.now(),
-      rpsSerie:             'EduCare',
+      rpsSerie:             'EduNest',
     })
 
     return NextResponse.json({ id: nfse!.id, xml, modo: 'manual' })

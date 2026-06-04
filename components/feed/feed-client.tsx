@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useTransition, useRef } from 'react'
 import { Plus, Heart, MessageCircle, Share2, X, Loader2, ImagePlus } from 'lucide-react'
@@ -82,9 +82,9 @@ export function FeedClient({ posts, turmas, escolaId, autorId, autorNome }: Prop
       if (fotoFile) {
         const ext  = fotoFile.name.split('.').pop()
         const path = `feed/${escolaId}/${Date.now()}.${ext}`
-        const { error: upErr } = await sb.storage.from('educare').upload(path, fotoFile)
+        const { error: upErr } = await sb.storage.from('EduNest').upload(path, fotoFile)
         if (!upErr) {
-          const { data: urlData } = sb.storage.from('educare').getPublicUrl(path)
+          const { data: urlData } = sb.storage.from('EduNest').getPublicUrl(path)
           foto_url = urlData.publicUrl
         }
       }

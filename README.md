@@ -1,6 +1,6 @@
-# EduCare Core
+﻿# EduNest Core
 
-EduCare Core is a modern management system for Brazilian preschools, designed to balance institutional reliability with the nurturing warmth essential to early childhood education.
+EduNest Core is a modern management system for Brazilian preschools, designed to balance institutional reliability with the nurturing warmth essential to early childhood education.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The platform provides school administrators with efficient management tools and 
 ## Tech Stack
 
 - **Framework:** Next.js
-- **Styling:** Tailwind CSS (following the EduCare Design System)
+- **Styling:** Tailwind CSS (following the EduNest Design System)
 - **Database & Auth:** Supabase
 - **Testing:** Vitest
 

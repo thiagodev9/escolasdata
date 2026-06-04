@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -410,7 +410,7 @@ export function OnboardingWizard({ escolaId, escolaNome }: Props) {
             </div>
             <h2 className="text-2xl font-bold text-[#1B3A6B] mb-3">{escolaNome} está pronta!</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Configuração concluída. Você já pode usar todas as funcionalidades do EduCare.
+              Configuração concluída. Você já pode usar todas as funcionalidades do EduNest.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4 mb-8 text-left">

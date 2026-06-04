@@ -1,5 +1,5 @@
----
-name: EduCare Core
+﻿---
+name: EduNest Core
 colors:
   surface: '#fff8f2'
   surface-dim: '#dfd9d3'

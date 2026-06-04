@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+﻿import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LoginForm } from '@/components/auth/login-form'
@@ -62,13 +62,13 @@ describe('LoginForm', () => {
 
     render(<LoginForm />)
     await userEvent.type(screen.getByLabelText(/e-mail/i), 'admin@starlight.com')
-    await userEvent.type(screen.getByPlaceholderText('••••••••'), 'educare123')
+    await userEvent.type(screen.getByPlaceholderText('••••••••'), 'EduNest123')
     fireEvent.click(screen.getByRole('button', { name: /entrar/i }))
 
     await waitFor(() => {
       expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
         email: 'admin@starlight.com',
-        password: 'educare123',
+        password: 'EduNest123',
       })
     })
   })

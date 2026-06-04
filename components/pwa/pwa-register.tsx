@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Bell, BellOff, Download, X } from 'lucide-react'
@@ -109,7 +109,7 @@ export function PWARegister({ userId, escolaId }: Props) {
             <Download className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold">Instalar EduCare</p>
+            <p className="text-sm font-bold">Instalar EduNest</p>
             <p className="text-xs text-muted-foreground">Adicione à tela inicial para acesso rápido.</p>
           </div>
           <button onClick={installApp}

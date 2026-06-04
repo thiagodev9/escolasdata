@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useTransition, useRef, useEffect, useCallback } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
@@ -110,8 +110,8 @@ export function PresencaClient({ alunos, turmas, presencasHoje, escolaId, dataHo
         ctx.drawImage(v, 0, 0)
         const img = ctx.getImageData(0, 0, v.videoWidth, v.videoHeight)
         const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' })
-        if (code?.data?.startsWith('educare://aluno/')) {
-          const alunoId = code.data.replace('educare://aluno/', '')
+        if (code?.data?.startsWith('EduNest://aluno/')) {
+          const alunoId = code.data.replace('EduNest://aluno/', '')
           handleQRScan(alunoId)
         }
         scanRef.current = requestAnimationFrame(scan)
@@ -259,7 +259,7 @@ export function PresencaClient({ alunos, turmas, presencasHoje, escolaId, dataHo
             <p className="font-bold text-lg text-center">{showQR.nome}</p>
             <div className="bg-white p-3 rounded-lg border-2 border-primary/20">
               <QRCodeSVG
-                value={`educare://aluno/${showQR.id}`}
+                value={`EduNest://aluno/${showQR.id}`}
                 size={180}
                 fgColor="#004ac6"
                 level="H"

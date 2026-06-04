@@ -19,7 +19,7 @@ export default async function MatriculaSucessoPage({ params }: { params: { slug:
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-white/60">Pré-Matrícula</p>
-            <p className="text-base font-bold">{escola?.nome ?? 'EduCare'}</p>
+            <p className="text-base font-bold">{escola?.nome ?? 'EduNest'}</p>
           </div>
         </div>
       </header>

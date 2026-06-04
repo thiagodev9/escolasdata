@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Send, MessageSquare, Clock, Users, CheckCircle2, AlertCircle, Loader2, Zap } from 'lucide-react'
@@ -19,10 +19,10 @@ interface Props {
 }
 
 const TEMPLATES = [
-  { label: 'Lembrete de pagamento', texto: 'Olá, {nome}! 👋\n\nPassamos para lembrar que a mensalidade de {escola} está em aberto.\n\nAcesse o app EduCare para pagar via PIX ou boleto. 💙' },
-  { label: 'Reunião de pais',       texto: 'Olá, {nome}!\n\n🗓 Lembramos que haverá reunião de pais na {escola}.\n\nConfirme sua presença pelo app EduCare.' },
-  { label: 'Recado da diretora',    texto: 'Olá, {nome}!\n\nA direção da {escola} tem um recado importante para você.\n\nAcesse o app EduCare para mais detalhes. 📲' },
-  { label: 'Evento especial',       texto: 'Olá, {nome}! 🎉\n\nTemos um evento especial na {escola} em breve.\n\nFique de olho no calendário pelo app EduCare!' },
+  { label: 'Lembrete de pagamento', texto: 'Olá, {nome}! 👋\n\nPassamos para lembrar que a mensalidade de {escola} está em aberto.\n\nAcesse o app EduNest para pagar via PIX ou boleto. 💙' },
+  { label: 'Reunião de pais',       texto: 'Olá, {nome}!\n\n🗓 Lembramos que haverá reunião de pais na {escola}.\n\nConfirme sua presença pelo app EduNest.' },
+  { label: 'Recado da diretora',    texto: 'Olá, {nome}!\n\nA direção da {escola} tem um recado importante para você.\n\nAcesse o app EduNest para mais detalhes. 📲' },
+  { label: 'Evento especial',       texto: 'Olá, {nome}! 🎉\n\nTemos um evento especial na {escola} em breve.\n\nFique de olho no calendário pelo app EduNest!' },
 ]
 
 function tempoRelativo(d: string) {

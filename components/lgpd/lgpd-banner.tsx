@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Shield, X, Check } from 'lucide-react'
 import Link from 'next/link'
 
-const KEY = 'educare_lgpd_consent'
+const KEY = 'EduNest_lgpd_consent'
 
 export function LgpdBanner() {
   const [show, setShow] = useState(false)

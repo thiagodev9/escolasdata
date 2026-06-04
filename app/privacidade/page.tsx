@@ -1,8 +1,8 @@
-import { GraduationCap, Shield } from 'lucide-react'
+﻿import { GraduationCap, Shield } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Política de Privacidade — EduCare',
+  title: 'Política de Privacidade — EduNest',
 }
 
 export default function PrivacidadePage() {
@@ -13,7 +13,7 @@ export default function PrivacidadePage() {
           <div className="w-9 h-9 bg-[#004ac6] rounded-md flex items-center justify-center">
             <GraduationCap className="w-5 h-5 text-white" />
           </div>
-          <p className="text-base font-bold">EduCare — Gestão Escolar</p>
+          <p className="text-base font-bold">EduNest — Gestão Escolar</p>
         </div>
       </header>
 
@@ -27,7 +27,7 @@ export default function PrivacidadePage() {
           <p className="text-sm text-gray-500 mb-6">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
 
           <Section title="1. Quem somos">
-            <p>O <strong>EduCare</strong> é uma plataforma SaaS de gestão para escolas infantis, operada por cada estabelecimento de ensino que utiliza o sistema. Esta política se aplica ao tratamento de dados realizado pelas escolas usuárias do EduCare e pelo próprio sistema.</p>
+            <p>O <strong>EduNest</strong> é uma plataforma SaaS de gestão para escolas infantis, operada por cada estabelecimento de ensino que utiliza o sistema. Esta política se aplica ao tratamento de dados realizado pelas escolas usuárias do EduNest e pelo próprio sistema.</p>
           </Section>
 
           <Section title="2. Base legal (LGPD)">
@@ -86,7 +86,7 @@ export default function PrivacidadePage() {
           </Section>
 
           <Section title="9. Contato — DPO">
-            <p>Para questões sobre privacidade ou para exercer seus direitos, contate o responsável da escola que utiliza o EduCare. Dúvidas sobre a plataforma: <strong>privacidade@educare.com.br</strong></p>
+            <p>Para questões sobre privacidade ou para exercer seus direitos, contate o responsável da escola que utiliza o EduNest. Dúvidas sobre a plataforma: <strong>privacidade@EduNest.com.br</strong></p>
           </Section>
         </div>
 

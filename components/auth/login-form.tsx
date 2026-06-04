@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -127,7 +127,7 @@ export function LoginForm() {
     <div className="bg-white rounded-3xl shadow-modal p-8 w-full border border-slate-100">
       {logo}
       <div className="flex flex-col items-center mb-8 -mt-4">
-        <h1 className="text-2xl font-black text-slate-800">Bem-vindo ao EduCare</h1>
+        <h1 className="text-2xl font-black text-slate-800">Bem-vindo ao EduNest</h1>
         <p className="text-sm text-slate-500 mt-1 text-center">Acesse sua conta para gerenciar sua escola</p>
       </div>
 
@@ -184,7 +184,7 @@ export function LoginForm() {
       </div>
 
       <div className="text-center">
-        <p className="text-sm text-slate-500 mb-3">Ainda não tem o EduCare na sua escola?</p>
+        <p className="text-sm text-slate-500 mb-3">Ainda não tem o EduNest na sua escola?</p>
         <a href="#" className="inline-flex items-center gap-2 border-2 border-primary/20 text-primary text-sm font-bold px-6 py-2.5 rounded-full hover:bg-primary/5 hover:border-primary/40 transition-all">
           Solicitar Demonstração <ArrowRight className="w-3.5 h-3.5" />
         </a>

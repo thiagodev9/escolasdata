@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Users, BookOpen, CalendarDays, DollarSign,
   Settings, Rss, LogOut, ScanLine, MessageSquareDot,
-  ClipboardList, BarChart3, FileText, Shield, Building2,
+  ClipboardList, BarChart3, FileText, Shield, Building2, DollarSign,
   ChevronLeft, ChevronRight, ChevronDown, UserCog, Receipt, ArrowLeftRight,
   UtensilsCrossed, Banknote,
 } from 'lucide-react'
@@ -71,7 +71,8 @@ const NAV_GROUPS: NavGroup[] = [
     key: 'sistema',
     items: [
       { label: 'LGPD',          href: '/lgpd',         icon: Shield,    roles: ['super_admin','diretora'],                                      color: 'text-red-400',    bgActive: 'bg-red-50' },
-      { label: 'Multi-unid.',   href: '/super-admin',  icon: Building2, roles: ['super_admin'],                                                 color: 'text-purple-600', bgActive: 'bg-purple-100' },
+      { label: 'Multi-unid.',   href: '/super-admin',  icon: Building2,    roles: ['super_admin'], color: 'text-purple-600', bgActive: 'bg-purple-100' },
+      { label: 'Assinaturas',   href: '/assinaturas',  icon: DollarSign,   roles: ['super_admin'], color: 'text-emerald-600', bgActive: 'bg-emerald-100' },
       { label: 'Configurações', href: '/configuracoes',icon: Settings,  roles: ['super_admin','diretora'],                                      color: 'text-slate-400',  bgActive: 'bg-slate-100' },
     ],
   },

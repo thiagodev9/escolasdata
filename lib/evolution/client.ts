@@ -1,6 +1,6 @@
-const BASE = process.env.EVOLUTION_API_URL  ?? ''
+﻿const BASE = process.env.EVOLUTION_API_URL  ?? ''
 const KEY  = process.env.EVOLUTION_API_KEY  ?? ''
-const INSTANCE = process.env.EVOLUTION_INSTANCE ?? 'educare'
+const INSTANCE = process.env.EVOLUTION_INSTANCE ?? 'EduNest'
 
 interface SendResult { status: 'ok' | 'error'; phone: string; error?: string }
 
@@ -60,7 +60,7 @@ export async function sendPresencaAlert(
   horaEntrada: string,
   nomeEscola: string
 ): Promise<SendResult> {
-  const text = `✅ *${nomeEscola}*\n\n${nomeAluno} chegou na escola às ${horaEntrada}.\n\nAcompanhe o dia pelo app EduCare. 🎒`
+  const text = `✅ *${nomeEscola}*\n\n${nomeAluno} chegou na escola às ${horaEntrada}.\n\nAcompanhe o dia pelo app EduNest. 🎒`
   return sendText(phoneResponsavel, text)
 }
 
@@ -70,7 +70,7 @@ export async function sendCobrancaAviso(
   valorVencido: string,
   nomeEscola: string
 ): Promise<SendResult> {
-  const text = `⚠️ *${nomeEscola}*\n\nOlá, ${nomeResponsavel}!\n\nVocê tem uma mensalidade em aberto no valor de ${valorVencido}.\n\nPague via PIX ou boleto pelo app EduCare. 📲`
+  const text = `⚠️ *${nomeEscola}*\n\nOlá, ${nomeResponsavel}!\n\nVocê tem uma mensalidade em aberto no valor de ${valorVencido}.\n\nPague via PIX ou boleto pelo app EduNest. 📲`
   return sendText(phoneResponsavel, text)
 }
 
