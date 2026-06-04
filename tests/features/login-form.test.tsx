@@ -20,9 +20,9 @@ describe('LoginForm', () => {
     expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument()
   })
 
-  it('renderiza link Solicitar Demonstração', () => {
+  it('renderiza link Criar conta grátis', () => {
     render(<LoginForm />)
-    expect(screen.getByText(/solicitar demonstração/i)).toBeInTheDocument()
+    expect(screen.getByText(/criar conta grátis/i)).toBeInTheDocument()
   })
 
   it('alterna visibilidade da senha', async () => {

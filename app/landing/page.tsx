@@ -1,48 +1,47 @@
 import Link from 'next/link'
 import {
-  Users, Calendar, CreditCard, MessageSquare, UtensilsCrossed,
-  BarChart3, Shield, Smartphone, CheckCircle2, Star, ArrowRight,
+  Users, BarChart3, Shield, Smartphone, CheckCircle2, Star, ArrowRight,
   Footprints, Heart, Zap, TrendingUp, Clock, Lock,
 } from 'lucide-react'
 
 export const metadata = {
   title: 'EduNest — Sistema de Gestão para Educação Infantil',
-  description: 'Gerencie alunos, frequência, mensalidades e comunique-se com os pais. O sistema completo para sua escola infantil.',
+  description: 'Chamada, mensalidades e portal dos pais em um só sistema. Feito para diretoras de escolas infantis brasileiras.',
 }
 
 const BENEFITS = [
-  { icon: Zap,         bg: '#eff6ff', color: '#2563eb', title: 'Tudo em um lugar',          desc: 'Alunos, frequência, mensalidades e comunicados. Sem planilha, sem papel, sem grupo de WhatsApp.' },
-  { icon: TrendingUp,  bg: '#f0fdf4', color: '#16a34a', title: 'Reduza inadimplência',       desc: 'Acompanhe em tempo real quem pagou e quem está em atraso. Alertas automáticos para os responsáveis.' },
-  { icon: Smartphone,  bg: '#fff7ed', color: '#ea580c', title: 'Pais sempre informados',     desc: 'Portal da família com frequência, cardápio e mensalidades. Acesso por link — sem senha para lembrar.' },
-  { icon: Clock,       bg: '#fdf4ff', color: '#9333ea', title: 'Economize horas por semana', desc: 'Chamada em 2 minutos, relatórios em um clique e cobranças automáticas todo mês.' },
-  { icon: BarChart3,   bg: '#f0f9ff', color: '#0891b2', title: 'Relatórios prontos',         desc: 'Frequência, aniversariantes, financeiro e lista de alunos exportados em PDF a qualquer momento.' },
-  { icon: Lock,        bg: '#fff1f2', color: '#e11d48', title: 'Segurança LGPD',             desc: 'Dados criptografados e isolados por escola. Conformidade total com a legislação brasileira.' },
+  { icon: Zap,        bg: '#eff6ff', color: '#2563eb', title: 'Tudo centralizado',         desc: 'Alunos, chamada, mensalidades e comunicados num único painel. Um login e zero planilha.' },
+  { icon: TrendingUp, bg: '#f0fdf4', color: '#16a34a', title: 'Acabe com a inadimplência', desc: 'Veja em tempo real quem pagou e quem está em atraso. Alertas automáticos — sem constrangimento.' },
+  { icon: Smartphone, bg: '#fff7ed', color: '#ea580c', title: 'Pais conectados',            desc: 'Portal da família com frequência, cardápio e mensalidades. Diferencial na hora de captar matrículas.' },
+  { icon: Clock,      bg: '#fdf4ff', color: '#9333ea', title: 'Recupere seu tempo',        desc: 'Chamada em 2 minutos, cobrança automática todo mês, relatórios em um clique. Horas de volta para você.' },
+  { icon: BarChart3,  bg: '#f0f9ff', color: '#0891b2', title: 'Gestão com dados reais',    desc: 'Frequência, inadimplência, aniversariantes e financeiro — relatórios em PDF quando precisar.' },
+  { icon: Lock,       bg: '#fff1f2', color: '#e11d48', title: '100% em conformidade',      desc: 'Dados criptografados, isolados por escola e adequados à LGPD. Sem risco jurídico para sua escola.' },
 ]
 
 const FEATURES = [
   {
     eyebrow: 'Frequência Digital',
-    title: 'Chamada em segundos, relatório automático',
-    desc: 'Marque a presença de cada aluno com um toque. O sistema calcula o percentual de frequência automaticamente e gera relatórios para pais e secretaria sem nenhum esforço extra.',
-    items: ['Chamada rápida por turma', 'Percentual por aluno e turma', 'Relatório mensal em PDF', 'Histórico completo do ano'],
+    title: 'Chamada em 2 minutos. Relatório que se escreve sozinho.',
+    desc: 'Chega de caderno de chamada e planilha do Excel. Com um toque, a presença fica registrada e os pais são notificados. O percentual de frequência é calculado automaticamente.',
+    items: ['Chamada por turma em segundos', 'Notificação automática ao responsável', 'Percentual de frequência por aluno', 'Relatório mensal em PDF com um clique'],
     color: '#0891b2',
     bg: '#f0f9ff',
     mockup: 'frequencia',
   },
   {
-    eyebrow: 'Mensalidades',
-    title: 'Controle financeiro sem planilha',
-    desc: 'Visualize em segundos quem pagou, quem está em aberto e quem está em atraso. Gere cobranças em lote e acompanhe a saúde financeira da escola em tempo real.',
-    items: ['Status de pagamento em tempo real', 'Geração em lote', 'Histórico completo por aluno', 'Relatório de inadimplência'],
+    eyebrow: 'Financeiro',
+    title: 'Saiba exatamente quem pagou — sem ligar para ninguém.',
+    desc: 'Visualize o status de cada mensalidade em tempo real. Gere cobranças em lote e acompanhe a inadimplência sem precisar cruzar planilha nenhuma.',
+    items: ['Status em tempo real: pago, em aberto, atrasado', 'Cobrança em lote com um clique', 'Alertas automáticos para responsáveis', 'Relatório de inadimplência exportável'],
     color: '#16a34a',
     bg: '#f0fdf4',
     mockup: 'mensalidades',
   },
   {
     eyebrow: 'Portal da Família',
-    title: 'Pais conectados sem grupo de WhatsApp',
-    desc: 'Cada responsável acessa frequência, cardápio, comunicados e mensalidades pelo celular — com link mágico por e-mail, sem precisar criar senha ou baixar app.',
-    items: ['Frequência em tempo real', 'Cardápio semanal', 'Comunicados e avisos', 'Situação financeira'],
+    title: 'Os pais acessam tudo pelo celular. Sem app, sem senha.',
+    desc: 'Cada responsável recebe um link no e-mail e acessa frequência, cardápio, comunicados e mensalidades direto no celular. Nenhum grupo de WhatsApp necessário.',
+    items: ['Frequência atualizada em tempo real', 'Cardápio semanal da semana', 'Avisos e comunicados da escola', 'Situação financeira completa'],
     color: '#9333ea',
     bg: '#fdf4ff',
     mockup: 'portal',
@@ -50,24 +49,25 @@ const FEATURES = [
 ]
 
 const PRICING = [
-  { faixa: 'Até 30 alunos',  preco: 'R$ 3,92', sub: '/aluno/mês', total: 'R$ 1.411/ano', economia: 'Economize R$ 353', destaque: false, cta: 'Assinar anual' },
-  { faixa: '31–80 alunos',   preco: 'R$ 3,12', sub: '/aluno/mês', total: 'R$ 2.995/ano', economia: 'Economize R$ 749', destaque: true,  cta: 'Assinar anual' },
-  { faixa: '81–150 alunos',  preco: 'R$ 2,32', sub: '/aluno/mês', total: 'R$ 4.838/ano', economia: 'Economize R$ 1.209', destaque: false, cta: 'Assinar anual' },
-  { faixa: '150+ alunos',    preco: 'R$ 1,59', sub: '/aluno/mês', total: 'R$ 5.724/ano', economia: 'Economize R$ 1.431', destaque: false, cta: 'Assinar anual' },
+  { faixa: 'Até 30 alunos',  preco: 'R$ 3,92', sub: '/aluno/mês', total: 'R$ 1.411/ano', economia: 'Economize R$ 353',   destaque: false, cta: 'Assinar agora' },
+  { faixa: '31–80 alunos',   preco: 'R$ 3,12', sub: '/aluno/mês', total: 'R$ 2.995/ano', economia: 'Economize R$ 749',   destaque: true,  cta: 'Assinar agora' },
+  { faixa: '81–150 alunos',  preco: 'R$ 2,32', sub: '/aluno/mês', total: 'R$ 4.838/ano', economia: 'Economize R$ 1.209', destaque: false, cta: 'Assinar agora' },
+  { faixa: '150+ alunos',    preco: 'R$ 1,59', sub: '/aluno/mês', total: 'R$ 5.724/ano', economia: 'Economize R$ 1.431', destaque: false, cta: 'Assinar agora' },
 ]
 
 const TESTIMONIALS = [
-  { nome: 'Silvana Moraes',    cargo: 'Diretora, Escola Base — Americana SP',        texto: 'Antes eu perdia horas com planilha e grupo de WhatsApp. Hoje faço a chamada em 2 minutos e os pais recebem tudo no portal.' },
-  { nome: 'Rosangela Pires',   cargo: 'Gestora, Creche Girassol — Campinas SP',      texto: 'O portal dos pais foi um diferencial enorme na captação. As mães adoram acompanhar a frequência do filho sem precisar ligar.' },
-  { nome: 'Carla Sampaio',     cargo: 'Diretora, Centro Infantil Arco-Íris — SP',    texto: 'O controle de mensalidades ficou muito mais fácil. Sei exatamente quem pagou e quem está em atraso sem nenhuma planilha.' },
+  { nome: 'Silvana Moraes',  cargo: 'Diretora, Escola Base — Americana SP',     texto: 'Eu gastava quase 2 horas por semana só em planilha e grupo de WhatsApp. Com o EduNest, a chamada fica pronta em 2 minutos e os pais recebem tudo no portal. Não volto atrás.' },
+  { nome: 'Rosangela Pires', cargo: 'Gestora, Creche Girassol — Campinas SP',   texto: 'O portal dos pais foi um diferencial enorme na captação de matrículas. As famílias adoram acompanhar a frequência do filho em tempo real — sem precisar ligar para a escola.' },
+  { nome: 'Carla Sampaio',   cargo: 'Diretora, Centro Infantil Arco-Íris — SP', texto: 'Antes eu precisava abrir três planilhas para saber quem estava devendo. Hoje abro o EduNest e em 5 segundos tenho o panorama financeiro completo da escola.' },
 ]
 
 const FAQS = [
-  { q: 'Preciso instalar algum aplicativo?',     r: 'Não. O EduNest funciona 100% no navegador — celular, tablet ou computador. Nenhuma instalação necessária.' },
-  { q: 'Como os pais acessam o portal?',         r: 'Pelo e-mail cadastrado. Eles recebem um link mágico e acessam tudo sem precisar criar senha ou baixar app.' },
-  { q: 'Como funciona a cobrança mensal?',       r: 'Por aluno ativo no mês. Escola com 25 alunos paga menos que escola com 80. O valor ajusta automaticamente conforme sua escola cresce.' },
-  { q: 'Meus dados ficam seguros?',              r: 'Sim. Dados criptografados, isolados por escola e em conformidade com a LGPD. Sem acesso de terceiros.' },
-  { q: 'Tem suporte em caso de dúvida?',         r: 'Suporte por WhatsApp em horário comercial. Equipe brasileira, sem chatbot, sem fila de espera.' },
+  { q: 'Preciso instalar algum aplicativo?',          r: 'Não. O EduNest funciona 100% no navegador — celular, tablet ou computador. Nenhuma instalação necessária, nem para você nem para os pais.' },
+  { q: 'Como os pais acessam o portal da família?',   r: 'Pelo e-mail cadastrado. Eles recebem um link direto e acessam frequência, cardápio e mensalidades sem precisar criar senha ou baixar app.' },
+  { q: 'Quanto tempo leva para configurar?',          r: 'No mesmo dia. Você cadastra a escola, importa os alunos via planilha e já começa a usar. Nossa equipe oferece suporte na implantação sem custo adicional.' },
+  { q: 'Como funciona a cobrança por aluno?',         r: 'Você paga apenas pelos alunos ativos. Uma escola com 25 alunos paga menos do que uma com 80. O valor se ajusta automaticamente conforme sua escola cresce.' },
+  { q: 'Meus dados e os dados dos alunos ficam seguros?', r: 'Sim. Todos os dados são criptografados, isolados por escola e armazenados em conformidade com a LGPD. Nenhum terceiro tem acesso às suas informações.' },
+  { q: 'Tem suporte quando eu precisar de ajuda?',    r: 'Suporte por WhatsApp em horário comercial. Equipe brasileira, resposta rápida — sem chatbot, sem fila de espera, sem inglês.' },
 ]
 
 export default function LandingPage() {
@@ -100,21 +100,21 @@ export default function LandingPage() {
         /* ── NAVBAR ── */
         .nav {
           position: sticky; top: 0; z-index: 100;
-          background: rgba(255,255,255,0.9);
+          background: rgba(255,255,255,0.92);
           backdrop-filter: blur(16px) saturate(180%);
           border-bottom: 1px solid var(--border);
         }
         .nav-wrap { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; }
         .nav-logo { display: flex; align-items: center; gap: 0.625rem; }
-        .nav-logo-icon { width: 2rem; height: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 0.55rem; display: flex; align-items: center; justify-content: center; }
+        .nav-logo-icon { width: 2rem; height: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 0.55rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .nav-logo-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--dark); letter-spacing: -0.03em; }
         .nav-links { display: flex; gap: 0.25rem; }
-        .nav-link { padding: 0.4rem 0.875rem; font-size: 0.875rem; font-weight: 500; color: var(--muted); border-radius: 0.5rem; transition: color 0.15s, background 0.15s; }
+        .nav-link { padding: 0.4rem 0.875rem; font-size: 0.875rem; font-weight: 500; color: var(--muted); border-radius: 0.5rem; transition: color 0.15s, background 0.15s; white-space: nowrap; }
         .nav-link:hover { color: var(--dark); background: var(--bg-subtle); }
         .nav-right { display: flex; align-items: center; gap: 0.75rem; }
-        .nav-login { font-size: 0.875rem; font-weight: 500; color: var(--mid); padding: 0.4rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s; }
+        .nav-login { font-size: 0.875rem; font-weight: 500; color: var(--mid); padding: 0.4rem 0.875rem; border-radius: 0.5rem; transition: color 0.15s; white-space: nowrap; }
         .nav-login:hover { color: var(--primary); }
-        .nav-cta { background: var(--primary); color: white; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1.125rem; border-radius: 100px; transition: background 0.15s, box-shadow 0.15s; box-shadow: 0 2px 8px var(--primary-glow); }
+        .nav-cta { background: var(--primary); color: white; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1.125rem; border-radius: 100px; transition: background 0.15s, box-shadow 0.15s; box-shadow: 0 2px 8px var(--primary-glow); white-space: nowrap; }
         .nav-cta:hover { background: var(--primary-dark); box-shadow: 0 4px 16px var(--primary-glow); }
 
         /* ── HERO ── */
@@ -132,10 +132,10 @@ export default function LandingPage() {
           margin-bottom: 1.75rem;
           animation: fadeUp 0.5s ease both;
         }
-        .badge-pulse { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        .badge-pulse { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
         .hero-h1 {
           font-family: 'Bricolage Grotesque', sans-serif;
-          font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+          font-size: clamp(2.25rem, 5vw, 4rem);
           font-weight: 800;
           line-height: 1.1;
           letter-spacing: -0.04em;
@@ -150,25 +150,25 @@ export default function LandingPage() {
           background-clip: text;
         }
         .hero-sub {
-          font-size: 1.1rem; color: var(--muted); line-height: 1.75; max-width: 540px; margin: 0 auto 2.25rem;
+          font-size: 1.1rem; color: var(--muted); line-height: 1.75; max-width: 560px; margin: 0 auto 2.25rem;
           font-weight: 300;
           animation: fadeUp 0.5s 0.16s ease both;
         }
         .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 2rem; animation: fadeUp 0.5s 0.24s ease both; }
-        .btn-primary { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--primary); color: white; font-weight: 600; font-size: 0.9375rem; padding: 0.8125rem 1.625rem; border-radius: 100px; transition: background 0.15s, box-shadow 0.2s, transform 0.15s; box-shadow: 0 4px 16px var(--primary-glow); }
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--primary); color: white; font-weight: 600; font-size: 0.9375rem; padding: 0.8125rem 1.625rem; border-radius: 100px; transition: background 0.15s, box-shadow 0.2s, transform 0.15s; box-shadow: 0 4px 16px var(--primary-glow); white-space: nowrap; }
         .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 8px 24px var(--primary-glow); transform: translateY(-1px); }
-        .btn-outline { display: inline-flex; align-items: center; gap: 0.4rem; border: 1.5px solid var(--border); color: var(--mid); font-weight: 500; font-size: 0.9375rem; padding: 0.8125rem 1.5rem; border-radius: 100px; transition: border-color 0.15s, color 0.15s; }
+        .btn-outline { display: inline-flex; align-items: center; gap: 0.4rem; border: 1.5px solid var(--border); color: var(--mid); font-weight: 500; font-size: 0.9375rem; padding: 0.8125rem 1.5rem; border-radius: 100px; transition: border-color 0.15s, color 0.15s; white-space: nowrap; }
         .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-        .hero-trust { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; animation: fadeUp 0.5s 0.32s ease both; }
-        .hero-trust-item { display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--muted); }
+        .hero-trust { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; justify-content: center; animation: fadeUp 0.5s 0.32s ease both; }
+        .hero-trust-item { display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--muted); white-space: nowrap; }
 
         /* ── STATS ── */
         .stats { padding: 3rem 1.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
-        .stats-wrap { max-width: 1160px; margin: 0 auto; display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; }
+        .stats-wrap { max-width: 1160px; margin: 0 auto; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
         .stat { text-align: center; }
         .stat-n { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--dark); line-height: 1; letter-spacing: -0.04em; }
         .stat-n span { color: var(--primary); }
-        .stat-label { font-size: 0.8125rem; color: var(--muted); margin-top: 0.25rem; font-weight: 400; }
+        .stat-label { font-size: 0.8125rem; color: var(--muted); margin-top: 0.3rem; font-weight: 400; }
 
         /* ── SECTION SHARED ── */
         .section { padding: 5.5rem 1.5rem; }
@@ -181,7 +181,7 @@ export default function LandingPage() {
         .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
         .benefit-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.625rem; transition: box-shadow 0.2s, transform 0.2s; }
         .benefit-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
-        .benefit-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .benefit-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; flex-shrink: 0; }
         .benefit-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.9375rem; font-weight: 700; color: var(--dark); margin-bottom: 0.375rem; letter-spacing: -0.01em; }
         .benefit-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
 
@@ -199,14 +199,15 @@ export default function LandingPage() {
 
         /* ── MOCKUP CONTAINER ── */
         .mockup-shell { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        .mockup-topbar { background: var(--bg-subtle); border-bottom: 1px solid var(--border); padding: 0.625rem 0.875rem; display: flex; align-items: center; gap: 0.375rem; }
-        .m-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .mockup-topbar { background: var(--bg-subtle); border-bottom: 1px solid var(--border); padding: 0.625rem 0.875rem; display: flex; align-items: center; gap: 0.375rem; overflow: hidden; }
+        .mockup-topbar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .m-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
         .mockup-body { padding: 1.25rem; }
         .m-row { display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 0; border-bottom: 1px solid #f1f5f9; }
         .m-row:last-child { border: none; }
         .m-name { font-size: 0.8125rem; font-weight: 500; color: var(--dark); }
         .m-sub { font-size: 0.7rem; color: var(--muted); }
-        .m-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 100px; }
+        .m-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 100px; white-space: nowrap; }
         .m-pct { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--primary); }
         .m-stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.625rem; margin-bottom: 1rem; }
         .m-stat { background: var(--bg-subtle); border-radius: 0.625rem; padding: 0.75rem; text-align: center; }
@@ -226,10 +227,10 @@ export default function LandingPage() {
         .phone-hdr-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); }
         .phone-content { padding: 0.625rem; display: flex; flex-direction: column; gap: 0.5rem; }
         .phone-card { background: white; border-radius: 0.75rem; padding: 0.75rem; border: 1px solid #f1f5f9; }
-        .phone-card-row { display: flex; align-items: center; justify-content: space-between; }
+        .phone-card-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
         .phone-card-name { font-weight: 600; font-size: 0.75rem; color: var(--dark); }
         .phone-card-sub { font-size: 0.6rem; color: #94a3b8; margin-top: 1px; }
-        .phone-pill { font-size: 0.58rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 100px; }
+        .phone-pill { font-size: 0.58rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 100px; white-space: nowrap; flex-shrink: 0; }
         .phone-warn { background: #fffbeb; border: 1px solid #fde68a; border-radius: 0.75rem; padding: 0.625rem; }
         .phone-warn-t { font-size: 0.7rem; font-weight: 600; color: #92400e; }
         .phone-warn-s { font-size: 0.6rem; color: #b45309; margin-top: 1px; }
@@ -237,18 +238,19 @@ export default function LandingPage() {
         .phone-mini { border-radius: 0.75rem; padding: 0.625rem; text-align: center; }
         .phone-mini-label { font-size: 0.58rem; font-weight: 600; }
         .phone-mini-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.1rem; font-weight: 800; margin-top: 2px; }
-        .phone-nb { background: white; border-top: 1px solid #f1f5f9; padding: 0.5rem; display: flex; justify-content: space-around; }
-        .phone-nb-item { font-size: 0.52rem; color: #94a3b8; font-weight: 500; text-align: center; }
+        .phone-nb { background: white; border-top: 1px solid #f1f5f9; padding: 0.5rem 0.25rem; display: flex; justify-content: space-around; gap: 0.125rem; overflow: hidden; }
+        .phone-nb-item { font-size: 0.5rem; color: #94a3b8; font-weight: 500; text-align: center; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 2px; }
 
         /* ── PRICING ── */
         .pricing-bg { background: var(--bg-subtle); }
         .pricing-head { text-align: center; margin-bottom: 3rem; }
-        .pricing-head .section-sub { margin: 0 auto; }
-        .pricing-annual-badge { display: inline-flex; align-items: center; gap: 0.375rem; background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.875rem; border-radius: 100px; margin-bottom: 1.5rem; }
+        .pricing-head .section-title { display: block; width: 100%; }
+        .pricing-head .section-sub { margin: 0.5rem auto 0; max-width: 520px; }
+        .pricing-annual-badge { display: inline-flex; align-items: center; gap: 0.375rem; background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.875rem; border-radius: 100px; margin-bottom: 1.5rem; white-space: nowrap; }
         .pricing-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
         .price-card { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; position: relative; transition: box-shadow 0.2s; }
         .price-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-        .price-economia { display: inline-block; background: #f0fdf4; color: #15803d; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 100px; margin-bottom: 1rem; }
+        .price-economia { display: inline-block; background: #f0fdf4; color: #15803d; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 100px; margin-bottom: 1rem; white-space: nowrap; }
         .price-card.featured { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
         .price-badge { position: absolute; top: -0.8rem; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.875rem; border-radius: 100px; white-space: nowrap; }
         .price-faixa { font-size: 0.8125rem; color: var(--muted); margin-bottom: 1.25rem; font-weight: 400; }
@@ -286,10 +288,10 @@ export default function LandingPage() {
         .cta-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%); pointer-events: none; }
         .cta-wrap { max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
         .cta-h2 { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: white; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 1rem; }
-        .cta-sub { font-size: 1rem; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 2.25rem; font-weight: 300; }
-        .btn-white { display: inline-flex; align-items: center; gap: 0.4rem; background: white; color: var(--primary-dark); font-weight: 700; font-size: 0.9375rem; padding: 0.8125rem 1.75rem; border-radius: 100px; transition: box-shadow 0.2s, transform 0.15s; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        .cta-sub { font-size: 1rem; color: rgba(255,255,255,0.78); line-height: 1.7; margin-bottom: 2.25rem; font-weight: 300; }
+        .btn-white { display: inline-flex; align-items: center; gap: 0.4rem; background: white; color: var(--primary-dark); font-weight: 700; font-size: 0.9375rem; padding: 0.8125rem 1.75rem; border-radius: 100px; transition: box-shadow 0.2s, transform 0.15s; box-shadow: 0 4px 16px rgba(0,0,0,0.12); white-space: nowrap; }
         .btn-white:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(-1px); }
-        .btn-ghost-white { display: inline-flex; align-items: center; gap: 0.4rem; border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85); font-weight: 500; font-size: 0.9375rem; padding: 0.8125rem 1.5rem; border-radius: 100px; transition: border-color 0.15s, color 0.15s; }
+        .btn-ghost-white { display: inline-flex; align-items: center; gap: 0.4rem; border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85); font-weight: 500; font-size: 0.9375rem; padding: 0.8125rem 1.5rem; border-radius: 100px; transition: border-color 0.15s, color 0.15s; white-space: nowrap; }
         .btn-ghost-white:hover { border-color: white; color: white; }
         .cta-note { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 1.25rem; }
 
@@ -329,8 +331,9 @@ export default function LandingPage() {
         @media (max-width: 600px) {
           .benefits-grid { grid-template-columns: 1fr; }
           .pricing-grid { grid-template-columns: 1fr; }
-          .stats-wrap { gap: 2.5rem; }
+          .stats-wrap { gap: 2rem; }
           .pricing-all-grid { grid-template-columns: repeat(2,1fr); }
+          .hero-trust { gap: 0.75rem 1.25rem; }
         }
       `}} />
 
@@ -348,8 +351,8 @@ export default function LandingPage() {
             <a href="#faq"             className="nav-link">Dúvidas</a>
           </nav>
           <div className="nav-right">
-            <Link href="/login" className="nav-login">Entrar</Link>
-            <Link href="/login" className="nav-cta">Criar conta</Link>
+            <Link href="/login"      className="nav-login">Entrar</Link>
+            <Link href="/login?modo=cadastro" className="nav-cta">Criar conta</Link>
           </div>
         </div>
       </header>
@@ -359,21 +362,21 @@ export default function LandingPage() {
         <div className="hero-wrap">
           <div className="hero-badge">
             <span className="badge-pulse" />
-            Sistema completo para educação infantil
+            Mais de 500 escolas confiam no EduNest
           </div>
           <h1 className="hero-h1">
-            Gerencie sua escola infantil<br />
-            com <span>profissionalismo</span>
+            Chega de planilha.<br />
+            Sua escola merece o <span>EduNest</span>.
           </h1>
           <p className="hero-sub">
-            Alunos, frequência, mensalidades e portal dos pais — tudo em um sistema criado especialmente para diretoras de escolas infantis brasileiras.
+            Chamada, mensalidades e portal dos pais — tudo em um sistema criado para a realidade das escolas infantis brasileiras. Simples de usar, rápido de aprender.
           </p>
           <div className="hero-actions">
-            <Link href="/login" className="btn-primary">
-              Começar agora <ArrowRight size={16} />
+            <Link href="/login?modo=cadastro" className="btn-primary">
+              Criar minha conta <ArrowRight size={16} />
             </Link>
             <a href="#funcionalidades" className="btn-outline">
-              Ver funcionalidades
+              Ver como funciona
             </a>
           </div>
           <div className="hero-trust">
@@ -390,10 +393,10 @@ export default function LandingPage() {
       <div className="stats">
         <div className="stats-wrap">
           {[
-            { n: '500', suf: '+', label: 'escolas cadastradas' },
+            { n: '500', suf: '+',   label: 'escolas ativas no Brasil' },
             { n: '12',  suf: 'mil', label: 'alunos gerenciados' },
-            { n: '98',  suf: '%', label: 'satisfação das diretoras' },
-            { n: '5',   suf: 'min', label: 'para aprender o sistema' },
+            { n: '98',  suf: '%',   label: 'de aprovação das diretoras' },
+            { n: '2',   suf: 'min', label: 'para fazer a chamada' },
           ].map(s => (
             <div key={s.label} className="stat">
               <div className="stat-n">{s.n}<span>{s.suf}</span></div>
@@ -406,13 +409,13 @@ export default function LandingPage() {
       {/* ── BENEFÍCIOS ── */}
       <section id="funcionalidades" className="section" style={{ background: 'white' }}>
         <div className="wrap">
-          <div style={{ textAlign: 'center', maxWidth: 560, margin: '0 auto 0' }}>
-            <div className="section-eyebrow">Por que o EduNest</div>
+          <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 0' }}>
+            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Por que o EduNest</div>
             <h2 className="section-title" style={{ margin: '0 auto 0.875rem' }}>
-              Tudo que sua escola precisa,<br />nada que não precisa
+              Feito para quem dirige escola,<br />não para programadores
             </h2>
-            <p className="section-sub" style={{ maxWidth: '100%' }}>
-              Substituímos planilha, caderno de chamada, grupo de WhatsApp e boleto manual — em um sistema que qualquer pessoa aprende em minutos.
+            <p className="section-sub" style={{ maxWidth: '100%', margin: '0 auto' }}>
+              Cada funcionalidade foi pensada para a realidade das escolas infantis brasileiras. Você aprende em minutos — sem treinamento, sem manual.
             </p>
           </div>
           <div className="benefits-grid">
@@ -448,7 +451,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/login" className="feature-cta" style={{ color: f.color }}>
+              <Link href="/login?modo=cadastro" className="feature-cta" style={{ color: f.color }}>
                 Começar agora <ArrowRight size={15} />
               </Link>
             </div>
@@ -473,15 +476,15 @@ export default function LandingPage() {
                       ))}
                     </div>
                     {[
-                      { n: 'Alice Teixeira',  t: '7B', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 96 },
-                      { n: 'Bruno Almeida',   t: '7B', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 88 },
-                      { n: 'Camila Rocha',    t: '7B', s: 'Ausente',  bg: '#fee2e2', tc: '#dc2626', pct: 72 },
-                      { n: 'Daniel Souza',    t: '7B', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 100 },
+                      { n: 'Alice Teixeira',  t: 'Jardim I', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 96 },
+                      { n: 'Bruno Almeida',   t: 'Jardim I', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 88 },
+                      { n: 'Camila Rocha',    t: 'Jardim I', s: 'Ausente',  bg: '#fee2e2', tc: '#dc2626', pct: 72 },
+                      { n: 'Daniel Souza',    t: 'Jardim I', s: 'Presente', bg: '#dcfce7', tc: '#15803d', pct: 100 },
                     ].map(row => (
                       <div key={row.n} className="m-row">
                         <div>
                           <div className="m-name">{row.n}</div>
-                          <div className="m-sub">Turma {row.t}</div>
+                          <div className="m-sub">{row.t}</div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <span className="m-tag" style={{ background: row.bg, color: row.tc }}>{row.s}</span>
@@ -511,10 +514,10 @@ export default function LandingPage() {
                       ))}
                     </div>
                     {[
-                      { n: 'Alice Teixeira',  v: 'R$ 850',  s: 'Pago',      bg: '#dcfce7', tc: '#15803d' },
-                      { n: 'Bruno Almeida',   v: 'R$ 850',  s: 'Pago',      bg: '#dcfce7', tc: '#15803d' },
-                      { n: 'Camila Rocha',    v: 'R$ 850',  s: 'Atrasado',  bg: '#fee2e2', tc: '#dc2626' },
-                      { n: 'Daniel Souza',    v: 'R$ 1.200',s: 'Em aberto', bg: '#fef3c7', tc: '#92400e' },
+                      { n: 'Alice Teixeira',  v: 'R$ 850',   s: 'Pago',      bg: '#dcfce7', tc: '#15803d' },
+                      { n: 'Bruno Almeida',   v: 'R$ 850',   s: 'Pago',      bg: '#dcfce7', tc: '#15803d' },
+                      { n: 'Camila Rocha',    v: 'R$ 850',   s: 'Atrasado',  bg: '#fee2e2', tc: '#dc2626' },
+                      { n: 'Daniel Souza',    v: 'R$ 1.200', s: 'Em aberto', bg: '#fef3c7', tc: '#92400e' },
                     ].map(row => (
                       <div key={row.n} className="m-row">
                         <div>
@@ -582,12 +585,12 @@ export default function LandingPage() {
       <section id="precos" className="section pricing-bg">
         <div className="wrap">
           <div className="pricing-head">
-            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Preços</div>
-            <h2 className="section-title" style={{ textAlign: 'center' }}>Planos anuais</h2>
-            <p className="section-sub">Cobrança por aluno ativo, cobrado anualmente. Economize até 20% em relação ao mensal.</p>
+            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Preços transparentes</div>
+            <h2 className="section-title" style={{ textAlign: 'center' }}>Menos de R$ 4 por aluno.<br />Por mês.</h2>
+            <p className="section-sub">Pague apenas pelos alunos ativos. Quanto maior sua escola, menor o valor por aluno.</p>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.25rem' }}>
               <span className="pricing-annual-badge">
-                <CheckCircle2 size={13} /> Pagamento anual — melhor custo-benefício
+                <CheckCircle2 size={13} /> Pagamento anual — economize até 20%
               </span>
             </div>
           </div>
@@ -600,14 +603,14 @@ export default function LandingPage() {
                 <div className="price-val">{p.preco}</div>
                 <div className="price-unit">{p.sub} · cobrado anualmente</div>
                 <div className="price-total">{p.total} no plano anual</div>
-                <Link href="/login" className="price-btn">{p.cta}</Link>
+                <Link href="/login?modo=cadastro" className="price-btn">{p.cta}</Link>
               </div>
             ))}
           </div>
           <div className="pricing-all">
-            <div className="pricing-all-title">Incluído em todos os planos</div>
+            <div className="pricing-all-title">Incluso em todos os planos</div>
             <div className="pricing-all-grid">
-              {['Portal dos pais','Frequência digital','Cardápio semanal','Comunicados','Relatórios PDF','Suporte WhatsApp','Atualizações grátis','Segurança LGPD','Sem contrato'].map(item => (
+              {['Portal dos pais','Frequência digital','Cardápio semanal','Comunicados','Relatórios PDF','Suporte via WhatsApp','Atualizações gratuitas','Conformidade LGPD','Sem fidelidade'].map(item => (
                 <div key={item} className="pricing-all-item">
                   <CheckCircle2 size={14} style={{ color: '#16a34a', flexShrink: 0 }} /> {item}
                 </div>
@@ -621,8 +624,8 @@ export default function LandingPage() {
       <section className="section" style={{ background: 'white' }}>
         <div className="wrap">
           <div style={{ textAlign: 'center', maxWidth: 520, margin: '0 auto' }}>
-            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Depoimentos</div>
-            <h2 className="section-title">Diretoras que transformaram suas escolas</h2>
+            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Depoimentos reais</div>
+            <h2 className="section-title">Diretoras que trocaram a planilha pelo EduNest</h2>
           </div>
           <div className="testi-grid">
             {TESTIMONIALS.map(t => (
@@ -649,7 +652,7 @@ export default function LandingPage() {
         <div className="wrap">
           <div style={{ textAlign: 'center' }}>
             <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Dúvidas frequentes</div>
-            <h2 className="section-title">Perguntas e respostas</h2>
+            <h2 className="section-title">Respostas diretas, sem enrolação</h2>
           </div>
           <div className="faq-wrap">
             {FAQS.map(f => (
@@ -666,19 +669,19 @@ export default function LandingPage() {
       <section className="cta-section">
         <div className="cta-glow" />
         <div className="cta-wrap">
-          <h2 className="cta-h2">Sua escola merece um sistema à altura</h2>
+          <h2 className="cta-h2">Sua concorrente já usa.<br />E você?</h2>
           <p className="cta-sub">
-            Comece hoje mesmo. Sem burocracia, sem contrato de fidelidade. Cancele quando quiser.
+            Centenas de diretoras brasileiras já trocaram a planilha pelo EduNest. Comece agora e veja a diferença na primeira semana.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
-            <Link href="/login" className="btn-white">
-              Criar conta <ArrowRight size={16} />
+            <Link href="/login?modo=cadastro" className="btn-white">
+              Criar minha conta agora <ArrowRight size={16} />
             </Link>
             <a href="https://wa.me/5519999999999" target="_blank" rel="noopener noreferrer" className="btn-ghost-white">
-              Falar com suporte
+              Falar com a equipe
             </a>
           </div>
-          <p className="cta-note">A partir de R$ 1,59/aluno/mês · Plano anual · Economize até 20%</p>
+          <p className="cta-note">A partir de R$ 1,59/aluno/mês · Plano anual · Sem contrato de fidelidade</p>
         </div>
       </section>
 
@@ -706,7 +709,8 @@ export default function LandingPage() {
                 <div className="footer-col-title">Conta</div>
                 <div className="footer-col-links">
                   <Link href="/login"  className="footer-col-link">Entrar</Link>
-                  <Link href="/login"  className="footer-col-link">Criar conta</Link>
+                  <Link href="/login?modo=cadastro" className="footer-col-link">Criar conta</Link>
+                  <Link href="/privacidade" className="footer-col-link">Privacidade</Link>
                 </div>
               </div>
             </div>

@@ -26,7 +26,7 @@ export default async function OnboardingPage() {
   }
 
   const escola = usuario.escola
-  if (!escola) redirect('/dashboard')
+  if (!escola) redirect('/login?modo=cadastro')
 
   return (
     <OnboardingWizard
