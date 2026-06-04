@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import {
   Eye, EyeOff, Mail, Lock, Footprints, ArrowRight,
   CheckCircle2, ChevronLeft, Loader2, User, Building2,
@@ -36,6 +37,7 @@ export function LoginForm() {
   const [cSenha,     setCSenha]     = useState('')
   const [cConfirmar, setCConfirmar] = useState('')
   const [cShowSenha, setCShowSenha] = useState(false)
+  const [cTermos,    setCTermos]    = useState(false)
   const [cLoading,   setCLoading]   = useState(false)
   const [cErro,      setCErro]      = useState('')
 
@@ -63,6 +65,7 @@ export function LoginForm() {
   async function handleCadastro(e: React.FormEvent) {
     e.preventDefault()
     setCErro('')
+    if (!cTermos)              { setCErro('Você precisa aceitar os Termos de Uso para continuar.'); return }
     if (cSenha !== cConfirmar) { setCErro('As senhas não coincidem.'); return }
     if (cSenha.length < 6)     { setCErro('A senha deve ter pelo menos 6 caracteres.'); return }
 
@@ -220,11 +223,32 @@ export function LoginForm() {
             </div>
           </div>
 
+          <div className="flex items-start gap-2.5 pt-1">
+            <input
+              id="cTermos"
+              type="checkbox"
+              checked={cTermos}
+              onChange={e => setCTermos(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-slate-300 accent-primary flex-shrink-0 cursor-pointer"
+            />
+            <Label htmlFor="cTermos" className="text-xs text-slate-600 font-normal cursor-pointer leading-relaxed">
+              Li e aceito os{' '}
+              <Link href="/termos" target="_blank" className="text-primary font-semibold hover:underline">
+                Termos de Uso e Contrato Anual
+              </Link>
+              {' '}e a{' '}
+              <Link href="/privacidade" target="_blank" className="text-primary font-semibold hover:underline">
+                Política de Privacidade
+              </Link>
+              {' '}do EduNest.
+            </Label>
+          </div>
+
           {cErro && (
             <div className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 border border-red-100 font-medium">{cErro}</div>
           )}
 
-          <Button type="submit" className="w-full gap-2" disabled={cLoading}>
+          <Button type="submit" className="w-full gap-2" disabled={cLoading || !cTermos}>
             {cLoading
               ? <><Loader2 className="w-4 h-4 animate-spin" /> Criando conta...</>
               : <>Criar conta <ArrowRight className="w-4 h-4" /></>}

@@ -40,7 +40,7 @@ export default async function AssinaturasPage() {
     }))
   ])
 
-  const assMap = new Map((assinaturasRes.data ?? []).map((a: any) => [a.escola_id, a]))
+  const assMap = new Map<string, any>((assinaturasRes.data ?? []).map((a: any) => [a.escola_id, a]))
   const countMap = new Map(alunosCountRes.map((a: any) => [a.escola_id, a.count]))
 
   const dados = (escolas ?? []).map((e: any) => {
@@ -61,8 +61,8 @@ export default async function AssinaturasPage() {
   })
 
   const receitaPotencial = dados
-    .filter(d => ['ativa','trial'].includes(d.status))
-    .reduce((acc, d) => acc + d.valor_mensal, 0)
+    .filter((d: any) => ['ativa', 'trial'].includes(d.status))
+    .reduce((acc: number, d: any) => acc + d.valor_mensal, 0)
 
   return (
     <div className="p-6 lg:p-10">

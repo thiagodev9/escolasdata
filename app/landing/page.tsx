@@ -412,7 +412,7 @@ export default function LandingPage() {
           <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 0' }}>
             <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Por que o EduNest</div>
             <h2 className="section-title" style={{ margin: '0 auto 0.875rem' }}>
-              Feito para quem dirige escola,<br />não para programadores
+              Menos tempo no computador.<br />Mais tempo com as crianças.
             </h2>
             <p className="section-sub" style={{ maxWidth: '100%', margin: '0 auto' }}>
               Cada funcionalidade foi pensada para a realidade das escolas infantis brasileiras. Você aprende em minutos — sem treinamento, sem manual.

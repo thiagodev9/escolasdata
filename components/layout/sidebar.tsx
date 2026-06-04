@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Users, BookOpen, CalendarDays, DollarSign,
   Settings, Rss, LogOut, ScanLine, MessageSquareDot,
-  ClipboardList, BarChart3, FileText, Shield, Building2, DollarSign,
+  ClipboardList, BarChart3, FileText, Shield, Building2,
   ChevronLeft, ChevronRight, ChevronDown, UserCog, Receipt, ArrowLeftRight,
   UtensilsCrossed, Banknote,
 } from 'lucide-react'
