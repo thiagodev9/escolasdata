@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { getResponsavel } from '@/lib/portal/get-responsavel'
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
 const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
@@ -19,13 +20,7 @@ export default async function PortalFrequenciaPage({
   if (!user) redirect('/portal/login')
 
   const admin = createAdminClient()
-
-  const { data: responsavel } = await (admin as any)
-    .from('responsaveis')
-    .select('id, nome')
-    .eq('email', user.email)
-    .maybeSingle() as { data: { id: string; nome: string } | null }
-
+  const responsavel = await getResponsavel(user.email!)
   if (!responsavel) redirect('/portal/login?erro=nao-cadastrado')
 
   const hoje = new Date()

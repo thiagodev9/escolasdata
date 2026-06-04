@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { ChevronLeft, CheckCircle2, Clock, AlertCircle, Ban } from 'lucide-react'
+import { getResponsavel } from '@/lib/portal/get-responsavel'
 
 const STATUS_CONFIG = {
   pago:     { label: 'Pago',     Icon: CheckCircle2, cor: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
@@ -25,13 +26,7 @@ export default async function PortalMensalidadesPage() {
   if (!user) redirect('/portal/login')
 
   const admin = createAdminClient()
-
-  const { data: responsavel } = await (admin as any)
-    .from('responsaveis')
-    .select('id, nome')
-    .eq('email', user.email)
-    .maybeSingle() as { data: { id: string; nome: string } | null }
-
+  const responsavel = await getResponsavel(user.email!)
   if (!responsavel) redirect('/portal/login?erro=nao-cadastrado')
 
   const { data: links } = await (admin as any)

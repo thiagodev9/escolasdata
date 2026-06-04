@@ -10,18 +10,38 @@ import Link from 'next/link'
 
 async function getDashboardData(escolaId: string) {
   const admin = createAdmin()
-  const [alunosRes, turmasRes, pendentesRes, feedRes] = await Promise.all([
-    (admin as any).from('alunos').select('id', { count: 'exact' }).eq('escola_id', escolaId),
+  const hoje = new Date()
+  const mesHoje = String(hoje.getMonth() + 1).padStart(2, '0')
+  const diaHoje = String(hoje.getDate()).padStart(2, '0')
+
+  const [alunosRes, turmasRes, pendentesRes, feedRes, todosAlunosRes, colaboradoresRes] = await Promise.all([
+    (admin as any).from('alunos').select('id', { count: 'exact' }).eq('escola_id', escolaId).eq('status', 'ativo'),
     (admin as any).from('turmas').select('id, nome, capacidade', { count: 'exact' }).eq('escola_id', escolaId),
     (admin as any).from('alunos').select('id', { count: 'exact' }).eq('escola_id', escolaId).eq('status', 'pendente'),
     (admin as any).from('feed_posts').select('id', { count: 'exact' }).eq('escola_id', escolaId),
+    (admin as any).from('alunos').select('id, nome, foto_url, dt_nascimento').eq('escola_id', escolaId).eq('status', 'ativo'),
+    (admin as any).from('colaboradores').select('id, nome, dt_admissao').eq('escola_id', escolaId).eq('ativo', true),
   ])
+
+  const anivAlunos: { id: string; nome: string; foto_url: string | null }[] =
+    (todosAlunosRes.data ?? [])
+      .filter((a: { dt_nascimento: string }) => {
+        const [, m, d] = (a.dt_nascimento ?? '').split('-')
+        return m === mesHoje && d === diaHoje
+      })
+      .map((a: { id: string; nome: string; foto_url: string | null }) => ({
+        id: a.id, nome: a.nome, foto_url: a.foto_url ?? null,
+      }))
+
+  const aniversariantes = anivAlunos
+
   return {
     totalAlunos: alunosRes.count ?? 0,
     totalTurmas: turmasRes.count ?? 0,
     turmas: turmasRes.data ?? [],
     pendentes: pendentesRes.count ?? 0,
     totalPosts: feedRes.count ?? 0,
+    aniversariantes,
   }
 }
 
@@ -76,6 +96,31 @@ export default async function DashboardPage() {
           <span className="text-xs text-emerald-500 font-semibold">ativos</span>
         </div>
       </div>
+
+      {/* Aniversariantes do dia */}
+      {stats.aniversariantes.length > 0 && (
+        <div className="mb-6 bg-gradient-to-r from-pink-50 to-amber-50 border border-pink-100 rounded-2xl p-4 flex items-center gap-4 flex-wrap">
+          <span className="text-2xl">🎂</span>
+          <div className="flex-1">
+            <p className="text-sm font-black text-pink-700">
+              Aniversário hoje!{stats.aniversariantes.length > 1 ? ` (${stats.aniversariantes.length} alunos)` : ''}
+            </p>
+            <p className="text-sm text-pink-600 font-semibold">
+              {stats.aniversariantes.map(a => a.nome.split(' ')[0]).join(', ')}
+            </p>
+          </div>
+          <div className="flex -space-x-2">
+            {stats.aniversariantes.slice(0, 5).map(a => (
+              <div key={a.id} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-pink-200 flex items-center justify-center shrink-0">
+                {a.foto_url
+                  ? <img src={a.foto_url} alt={a.nome} className="w-full h-full object-cover" />
+                  : <span className="text-xs font-black text-pink-700">{a.nome[0]}</span>
+                }
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* KPIs — ícones coloridos */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
@@ -136,13 +181,13 @@ export default async function DashboardPage() {
               <ChevronRight className="w-4 h-4 ml-auto text-slate-300 group-hover:text-slate-500" />
             </Link>
             <Link
-              href="/financeiro"
+              href="/mensalidades"
               className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 hover:bg-slate-50 transition-all font-bold text-sm text-slate-700 group"
             >
               <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-emerald-500" />
               </div>
-              Relatório Financeiro
+              Mensalidades
               <ChevronRight className="w-4 h-4 ml-auto text-slate-300 group-hover:text-slate-500" />
             </Link>
           </div>
@@ -183,17 +228,6 @@ export default async function DashboardPage() {
                 <ChevronRight className="w-4 h-4 text-slate-300 shrink-0 mt-0.5 group-hover:text-slate-500" />
               </div>
             )}
-
-            <div className="flex items-start gap-3 p-3 rounded-xl border border-amber-100 bg-amber-50 cursor-pointer hover:bg-amber-100 transition-colors group">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                <DollarSign className="w-4 h-4 text-amber-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-slate-800">Pendência financeira: Turma Girassol</p>
-                <p className="text-xs text-slate-500 mt-0.5">Boletos em atraso atualizados há 15 min.</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 shrink-0 mt-0.5 group-hover:text-slate-500" />
-            </div>
 
             <div className="flex items-start gap-3 p-3 rounded-xl border border-blue-100 bg-blue-50 cursor-pointer hover:bg-blue-100 transition-colors group">
               <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">

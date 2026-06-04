@@ -1,5 +1,5 @@
 export type Role = 'super_admin' | 'diretora' | 'professora' | 'responsavel'
-export type MatriculaStatus = 'aguardando' | 'aprovada' | 'rejeitada'
+export type MatriculaStatus = 'nova' | 'contato' | 'visita' | 'documentacao' | 'aprovada' | 'rejeitada'
 export type Plano = 'basico' | 'profissional' | 'enterprise'
 export type AlunoStatus = 'ativo' | 'inativo' | 'pendente'
 
@@ -82,6 +82,8 @@ export interface Matricula {
   resp_parentesco: string
   status: MatriculaStatus
   observacoes: string | null
+  observacao_interna: string | null
+  atualizado_em: string | null
   criado_em: string
 }
 

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient as createServerClient } from '@/lib/supabase/server'
-import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { PortalNav } from '@/components/portal/portal-nav'
+import { getResponsavel } from '@/lib/portal/get-responsavel'
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const supabase = createServerClient()
@@ -9,12 +9,7 @@ export default async function PortalLayout({ children }: { children: React.React
 
   if (!user) redirect('/portal/login')
 
-  const admin = createAdminClient()
-  const { data: responsavel } = await (admin as any)
-    .from('responsaveis')
-    .select('id')
-    .eq('email', user.email)
-    .maybeSingle()
+  const responsavel = await getResponsavel(user.email!)
 
   if (!responsavel) redirect('/portal/login?erro=nao-cadastrado')
 

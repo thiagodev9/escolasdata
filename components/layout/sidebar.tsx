@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Users, BookOpen, CalendarDays, DollarSign,
   Settings, Rss, LogOut, ScanLine, MessageSquareDot,
-  ClipboardList, BarChart3, FileText, Shield, Building2,
+  ClipboardList, BarChart3, Shield, Building2,
   ChevronLeft, ChevronRight, ChevronDown, UserCog, Receipt, ArrowLeftRight,
-  UtensilsCrossed, Banknote,
+  UtensilsCrossed, Banknote, BookMarked, BellRing, UserMinus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -46,10 +46,12 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Pedagógico',
     key: 'pedagogico',
     items: [
-      { label: 'Turmas',      href: '/turmas',       icon: BookOpen,        roles: ['super_admin','diretora','professora'],                       color: 'text-violet-600',  bgActive: 'bg-violet-100' },
-      { label: 'Presença',    href: '/presenca',     icon: ScanLine,        roles: ['super_admin','diretora','professora'],                       color: 'text-teal-600',    bgActive: 'bg-teal-100' },
-      { label: 'Diário',      href: '/diario-massa', icon: BookOpen,        roles: ['super_admin','diretora','professora'],                       color: 'text-cyan-600',    bgActive: 'bg-cyan-100' },
-      { label: 'Comunicados', href: '/comunicados',  icon: MessageSquareDot,roles: ['super_admin','diretora'],                                    color: 'text-indigo-600',  bgActive: 'bg-indigo-100' },
+      { label: 'Turmas',          href: '/turmas',           icon: BookOpen,        roles: ['super_admin','diretora','professora'],            color: 'text-violet-600',  bgActive: 'bg-violet-100' },
+      { label: 'Presença',        href: '/presenca',         icon: ScanLine,        roles: ['super_admin','diretora','professora'],            color: 'text-teal-600',    bgActive: 'bg-teal-100' },
+      { label: 'Diário',          href: '/diario-massa',     icon: BookOpen,        roles: ['super_admin','diretora','professora'],            color: 'text-cyan-600',    bgActive: 'bg-cyan-100' },
+      { label: 'Currículo',       href: '/curriculo',        icon: BookMarked,      roles: ['super_admin','diretora','professora'],            color: 'text-fuchsia-600', bgActive: 'bg-fuchsia-100' },
+      { label: 'Avisos Internos', href: '/avisos-internos',  icon: BellRing,        roles: ['super_admin','diretora','professora'],            color: 'text-amber-600',   bgActive: 'bg-amber-100' },
+      { label: 'Comunicados',     href: '/comunicados',      icon: MessageSquareDot,roles: ['super_admin','diretora'],                        color: 'text-indigo-600',  bgActive: 'bg-indigo-100' },
     ],
   },
   {
@@ -57,13 +59,13 @@ const NAV_GROUPS: NavGroup[] = [
     key: 'administrativo',
     items: [
       { label: 'Colaboradores',    href: '/colaboradores', icon: UserCog,           roles: ['super_admin','diretora'],                color: 'text-sky-600',     bgActive: 'bg-sky-100' },
+      { label: 'Ausências',        href: '/ausencias',     icon: UserMinus,         roles: ['super_admin','diretora'],                color: 'text-orange-500',  bgActive: 'bg-orange-50' },
       { label: 'Mensalidades',     href: '/mensalidades',  icon: Banknote,          roles: ['super_admin','diretora'],                color: 'text-green-600',   bgActive: 'bg-green-100' },
       { label: 'Gastos',           href: '/gastos',        icon: Receipt,           roles: ['super_admin','diretora'],                color: 'text-red-500',     bgActive: 'bg-red-50' },
       { label: 'Cardápio',         href: '/cardapio',      icon: UtensilsCrossed,   roles: ['super_admin','diretora','professora'],    color: 'text-orange-500',  bgActive: 'bg-orange-50' },
       { label: 'Importar/Exportar',href: '/importar',      icon: ArrowLeftRight,    roles: ['super_admin','diretora'],                color: 'text-indigo-500',  bgActive: 'bg-indigo-50' },
       { label: 'Matrículas',       href: '/matriculas',    icon: ClipboardList,     roles: ['super_admin','diretora'],                color: 'text-amber-600',   bgActive: 'bg-amber-100' },
       { label: 'Relatórios',       href: '/relatorios',    icon: BarChart3,         roles: ['super_admin','diretora','professora'],    color: 'text-blue-500',    bgActive: 'bg-blue-50' },
-      { label: 'NFS-e',            href: '/nfse',          icon: FileText,          roles: ['super_admin','diretora'],                color: 'text-slate-500',   bgActive: 'bg-slate-100' },
     ],
   },
   {

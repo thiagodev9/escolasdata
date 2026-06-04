@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { ChevronLeft, Bell } from 'lucide-react'
+import { getResponsavel } from '@/lib/portal/get-responsavel'
 
 const CATEGORIA_COR: Record<string, string> = {
   geral:       'bg-slate-100 text-slate-600',
@@ -20,13 +21,7 @@ export default async function PortalAvisosPage() {
   if (!user) redirect('/portal/login')
 
   const admin = createAdminClient()
-
-  const { data: responsavel } = await (admin as any)
-    .from('responsaveis')
-    .select('id, escola_id')
-    .eq('email', user.email)
-    .maybeSingle() as { data: { id: string; escola_id: string } | null }
-
+  const responsavel = await getResponsavel(user.email!)
   if (!responsavel) redirect('/portal/login?erro=nao-cadastrado')
 
   const { data: posts } = await (admin as any)

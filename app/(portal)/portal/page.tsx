@@ -4,22 +4,20 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { Calendar, CreditCard, ChevronRight, Footprints, BookOpen } from 'lucide-react'
+import { Calendar, CreditCard, ChevronRight, Footprints, BookOpen, NotebookPen, CalendarX } from 'lucide-react'
+import { getResponsavel } from '@/lib/portal/get-responsavel'
 
 export default async function PortalHomePage() {
   const supabase = createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/portal/login')
 
-  const admin = createAdminClient()
-
-  const { data: responsavel } = await (admin as any)
-    .from('responsaveis')
-    .select('id, nome')
-    .eq('email', user.email)
-    .maybeSingle() as { data: { id: string; nome: string } | null }
+  // getResponsavel usa React.cache() — sem round-trip extra se layout já chamou
+  const responsavel = await getResponsavel(user.email!)
 
   if (!responsavel) redirect('/portal/login?erro=nao-cadastrado')
+
+  const admin = createAdminClient()
 
   const { data: links } = await (admin as any)
     .from('alunos_responsaveis')
@@ -35,14 +33,28 @@ export default async function PortalHomePage() {
   const hoje = new Date().toISOString().split('T')[0]
   const alunoIds = alunos.map(a => a.id)
 
-  const [presencasHoje, mensalidasPendentes] = await Promise.all([
+  const [presencasHoje, mensalidasPendentes, diariosRes, vistosRes] = await Promise.all([
     alunoIds.length > 0
       ? (admin as any).from('presencas').select('aluno_id, status').in('aluno_id', alunoIds).eq('data', hoje)
       : { data: [] },
     alunoIds.length > 0
       ? (admin as any).from('mensalidades').select('id').in('aluno_id', alunoIds).in('status', ['pendente', 'vencido'])
       : { data: [] },
+    alunoIds.length > 0
+      ? (admin as any)
+          .from('registros_diarios')
+          .select('id')
+          .in('aluno_id', alunoIds)
+          .gte('data', (() => { const d = new Date(); d.setDate(d.getDate() - 3); return d.toISOString().split('T')[0] })())
+      : { data: [] },
+    (admin as any)
+      .from('diario_visualizacoes')
+      .select('registro_id')
+      .eq('responsavel_id', responsavel.id),
   ])
+
+  const vistosSet = new Set((vistosRes.data ?? []).map((v: any) => v.registro_id))
+  const qtdDiariosNaoVistos = (diariosRes.data ?? []).filter((r: any) => !vistosSet.has(r.id)).length
 
   const presMap = new Map((presencasHoje.data ?? []).map((p: any) => [p.aluno_id, p.status]))
   const qtdPendente = (mensalidasPendentes.data ?? []).length
@@ -126,6 +138,21 @@ export default async function PortalHomePage() {
           <CreditCard className="w-6 h-6 text-emerald-500" />
           <span className="font-bold text-slate-700 text-sm">Mensalidades</span>
           <span className="text-xs text-slate-400">Situação financeira</span>
+        </Link>
+        <Link href="/portal/diario" className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 hover:border-violet-200 transition-colors relative">
+          <NotebookPen className="w-6 h-6 text-violet-500" />
+          <span className="font-bold text-slate-700 text-sm">Diário</span>
+          <span className="text-xs text-slate-400">Atividades do dia</span>
+          {qtdDiariosNaoVistos > 0 && (
+            <span className="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+              {qtdDiariosNaoVistos > 9 ? '9+' : qtdDiariosNaoVistos}
+            </span>
+          )}
+        </Link>
+        <Link href="/portal/avisar-falta" className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 hover:border-amber-200 transition-colors">
+          <CalendarX className="w-6 h-6 text-amber-500" />
+          <span className="font-bold text-slate-700 text-sm">Avisar falta</span>
+          <span className="text-xs text-slate-400">Avisar ausência</span>
         </Link>
         <Link href="/portal/avisos" className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 hover:border-orange-200 transition-colors col-span-2">
           <BookOpen className="w-6 h-6 text-orange-500" />

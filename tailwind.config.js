@@ -11,9 +11,9 @@ module.exports = {
 
       // ── FONTES ──────────────────────────────────────────────────────────────
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans:    ['Outfit', 'system-ui', 'sans-serif'],
-        mono:    ['JetBrains Mono', 'monospace'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        sans:    ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono:    ['var(--font-mono)', 'monospace'],
       },
 
       // ── CORES ───────────────────────────────────────────────────────────────

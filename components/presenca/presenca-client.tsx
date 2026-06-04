@@ -4,7 +4,7 @@ import { useState, useTransition, useRef, useEffect, useCallback } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import {
   QrCode, Camera, CheckCircle2, XCircle, Clock,
-  Filter, Download, X, Users, AlertCircle
+  Download, X, AlertCircle, MessageCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/client'
@@ -14,6 +14,8 @@ import jsQR from 'jsqr'
 interface Aluno {
   id: string; nome: string; foto_url: string | null
   turma_nome: string | null; turma_id: string | null
+  resp_nome: string | null; resp_telefone: string | null
+  aviso_falta: string | null
 }
 interface Turma  { id: string; nome: string }
 interface Presenca { id: string; aluno_id: string; status: string; hora_entrada?: string; hora_saida?: string }
@@ -198,18 +200,25 @@ export function PresencaClient({ alunos, turmas, presencasHoje, escolaId, dataHo
           const st  = p ? STATUS_CFG[p.status as keyof typeof STATUS_CFG] : null
           const ini = aluno.nome.split(' ').slice(0,2).map((n:string)=>n[0]).join('')
           return (
-            <div key={aluno.id} className="flex items-center gap-4 px-5 py-3 hover:bg-muted/20 transition-colors">
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+            <div key={aluno.id} className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/20 transition-colors ${aluno.aviso_falta !== null ? 'bg-amber-50/60' : ''}`}>
+              {/* Avatar com foto */}
+              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden border-2 border-white shadow-sm">
                 {aluno.foto_url
                   ? <img src={aluno.foto_url} className="w-full h-full object-cover" alt={aluno.nome} />
-                  : <span className="text-sm font-bold text-primary">{ini}</span>
+                  : <span className="text-sm font-black text-primary">{ini}</span>
                 }
               </div>
-              {/* Nome */}
+              {/* Nome + aviso falta */}
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate">{aluno.nome}</p>
-                <p className="text-xs text-muted-foreground">{aluno.turma_nome ?? '—'}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-bold text-sm truncate">{aluno.nome}</p>
+                  {aluno.aviso_falta !== null && (
+                    <span className="text-[10px] font-black bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
+                      ⚠️ Avisou falta{aluno.aviso_falta ? `: ${aluno.aviso_falta}` : ''}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">{aluno.turma_nome ?? '—'}{aluno.resp_nome ? ` · ${aluno.resp_nome.split(' ')[0]}` : ''}</p>
               </div>
               {/* Hora */}
               {p?.hora_entrada && (
@@ -220,26 +229,37 @@ export function PresencaClient({ alunos, turmas, presencasHoje, escolaId, dataHo
               )}
               {/* Status badge */}
               {st && (
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${st.cls}`}>{st.label}</span>
+                <span className={`hidden sm:inline text-xs font-semibold px-2.5 py-1 rounded-full ${st.cls}`}>{st.label}</span>
               )}
               {/* Ações */}
               <div className="flex gap-1 shrink-0">
                 <button onClick={() => registrar(aluno.id, 'presente')} disabled={loading === aluno.id}
                   title="Presente"
-                  className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                     p?.status === 'presente' ? 'bg-green-100 text-green-600' : 'hover:bg-green-50 text-muted-foreground hover:text-green-600'
                   }`}>
                   <CheckCircle2 className="w-4 h-4" />
                 </button>
                 <button onClick={() => registrar(aluno.id, 'ausente')} disabled={loading === aluno.id}
                   title="Ausente"
-                  className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                     p?.status === 'ausente' ? 'bg-red-100 text-red-600' : 'hover:bg-red-50 text-muted-foreground hover:text-red-500'
                   }`}>
                   <XCircle className="w-4 h-4" />
                 </button>
+                {aluno.resp_telefone && (
+                  <a
+                    href={`https://wa.me/55${aluno.resp_telefone.replace(/\D/g,'')}?text=${encodeURIComponent(`Olá${aluno.resp_nome ? ' ' + aluno.resp_nome.split(' ')[0] : ''}! Passando um recado sobre ${aluno.nome.split(' ')[0]}.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp do responsável"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-green-50 text-muted-foreground hover:text-[#25D366] transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </a>
+                )}
                 <button onClick={() => setShowQR(aluno)} title="Ver QR Code"
-                  className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground">
+                  className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground">
                   <QrCode className="w-4 h-4" />
                 </button>
               </div>

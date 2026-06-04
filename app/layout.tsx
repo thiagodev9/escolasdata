@@ -1,7 +1,30 @@
 import type { Metadata } from 'next'
+import { Outfit, Fraunces, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { LgpdBanner } from '@/components/lgpd/lgpd-banner'
 import { SwRegister } from '@/components/pwa/sw-register'
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['300', '400', '600', '700', '900'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'EduNest — Portal Pré-Escolar',
@@ -25,14 +48,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${outfit.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap"
-          rel="stylesheet"
-        />
         {/* PWA iOS */}
         <meta name="apple-mobile-web-app-capable"           content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style"  content="default" />

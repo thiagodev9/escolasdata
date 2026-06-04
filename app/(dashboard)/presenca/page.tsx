@@ -13,10 +13,10 @@ export default async function PresencaPage() {
   const escolaId = usuario?.escola_id ?? ''
   const hoje = new Date().toISOString().split('T')[0]
 
-  const [alunosRes, turmasRes, presencasRes] = await Promise.all([
+  const [alunosRes, turmasRes, presencasRes, avisosRes] = await Promise.all([
     (admin as any)
       .from('alunos')
-      .select('id, nome, foto_url, status, alunos_turmas(turma:turmas(id, nome))')
+      .select('id, nome, foto_url, status, alunos_turmas(turma:turmas(id, nome)), alunos_responsaveis(responsavel:responsaveis(nome, telefone))')
       .eq('escola_id', escolaId)
       .eq('status', 'ativo')
       .order('nome'),
@@ -24,12 +24,22 @@ export default async function PresencaPage() {
       .from('turmas').select('id, nome').eq('escola_id', escolaId).order('nome'),
     (admin as any)
       .from('presencas').select('*').eq('escola_id', escolaId).eq('data', hoje),
+    (admin as any)
+      .from('avisos_falta').select('aluno_id, motivo').eq('escola_id', escolaId).eq('data', hoje),
   ])
+
+  const avisosMap: Record<string, string | null> = {}
+  for (const av of avisosRes.data ?? []) {
+    avisosMap[av.aluno_id] = av.motivo ?? ''
+  }
 
   const alunos = (alunosRes.data ?? []).map((a: any) => ({
     ...a,
-    turma_nome: a.alunos_turmas?.[0]?.turma?.nome ?? null,
-    turma_id:   a.alunos_turmas?.[0]?.turma?.id   ?? null,
+    turma_nome:       a.alunos_turmas?.[0]?.turma?.nome  ?? null,
+    turma_id:         a.alunos_turmas?.[0]?.turma?.id    ?? null,
+    resp_nome:        a.alunos_responsaveis?.[0]?.responsavel?.nome     ?? null,
+    resp_telefone:    a.alunos_responsaveis?.[0]?.responsavel?.telefone ?? null,
+    aviso_falta:      avisosMap[a.id] ?? null,
   }))
 
   const presencasMap: Record<string, any> = {}
@@ -48,4 +58,5 @@ export default async function PresencaPage() {
       />
     </div>
   )
+
 }
