@@ -1,35 +1,31 @@
 export const dynamic = 'force-dynamic'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { AvisosInternosClient } from '@/components/avisos-internos/avisos-internos-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export default async function AvisosInternosPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const admin = createAdmin()
-  const { data: usuario } = await (admin as any)
-    .from('usuarios')
-    .select('escola_id, role, nome')
-    .eq('id', user.id)
-    .single()
-
+  const usuario = await getUsuarioAtual()
   if (!usuario || !['super_admin','diretora','professora'].includes(usuario.role)) redirect('/dashboard')
 
-  const { data: avisos } = await (admin as any)
-    .from('avisos_internos')
-    .select('id, titulo, conteudo, prioridade, criado_em, criado_por:usuarios!avisos_internos_criado_por_fkey(nome)')
-    .eq('escola_id', usuario.escola_id)
-    .order('criado_em', { ascending: false })
-    .limit(50)
+  const admin = createAdmin()
 
-  const { data: lidos } = await (admin as any)
-    .from('avisos_lidos')
-    .select('aviso_id')
-    .eq('usuario_id', user.id)
+  const [avisosRes, lidosRes] = await Promise.all([
+    (admin as any)
+      .from('avisos_internos')
+      .select('id, titulo, conteudo, prioridade, criado_em, criado_por:usuarios!avisos_internos_criado_por_fkey(nome)')
+      .eq('escola_id', usuario.escola_id)
+      .order('criado_em', { ascending: false })
+      .limit(50),
+    (admin as any)
+      .from('avisos_lidos')
+      .select('aviso_id')
+      .eq('usuario_id', usuario.id),
+  ])
+
+  const avisos = avisosRes.data
+  const lidos  = lidosRes.data
 
   const lidosSet = new Set((lidos ?? []).map((l: any) => l.aviso_id))
 
@@ -48,7 +44,7 @@ export default async function AvisosInternosPage() {
       <AvisosInternosClient
         avisos={avisosFormatados}
         escolaId={usuario.escola_id}
-        userId={user.id}
+        userId={usuario.id}
         userRole={usuario.role}
       />
     </div>

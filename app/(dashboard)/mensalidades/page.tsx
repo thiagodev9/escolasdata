@@ -1,46 +1,42 @@
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { MensalidadesClient, type AlunoComMensalidade } from '@/components/mensalidades/mensalidades-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export const dynamic = 'force-dynamic'
 
 export default async function MensalidadesPage() {
-  const supabase = createClient()
-  const { data: { user } } = await (supabase as any).auth.getUser()
-  if (!user) redirect('/login')
-
-  const admin = createAdmin() as any
-  const { data: usuario } = await admin.from('usuarios').select('escola_id, role').eq('id', user.id).single()
+  const usuario = await getUsuarioAtual()
   if (!usuario || !['diretora','super_admin'].includes(usuario.role)) redirect('/dashboard')
 
+  const admin = createAdmin() as any
   const escolaId = usuario.escola_id
   const hoje = new Date()
   const mesRef = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`
 
-  // Configurações da escola (valor padrão e dia de vencimento)
-  const { data: config } = await admin.from('configuracoes_escola')
-    .select('valor_mensalidade, dia_vencimento')
-    .eq('escola_id', escolaId)
-    .maybeSingle()
+  // 3 queries em paralelo (antes eram 3 waterfalls sequenciais)
+  const [configRes, alunosRawRes, mensalidadesRawRes] = await Promise.all([
+    admin.from('configuracoes_escola')
+      .select('valor_mensalidade, dia_vencimento')
+      .eq('escola_id', escolaId)
+      .maybeSingle(),
+    admin.from('alunos')
+      .select('id, nome, alunos_turmas(turma:turmas(nome))')
+      .eq('escola_id', escolaId)
+      .eq('status', 'ativo')
+      .order('nome'),
+    admin.from('mensalidades')
+      .select('*')
+      .eq('escola_id', escolaId)
+      .eq('mes_referencia', mesRef),
+  ])
 
-  const valorPadrao    = config?.valor_mensalidade ?? 0
-  const diaVencimento  = config?.dia_vencimento ?? 10
+  const config         = configRes.data
+  const alunosRaw      = alunosRawRes.data
+  const mensalidadesRaw = mensalidadesRawRes.data
 
-  // Alunos ativos com suas turmas
-  const { data: alunosRaw } = await admin
-    .from('alunos')
-    .select('id, nome, alunos_turmas(turma:turmas(nome))')
-    .eq('escola_id', escolaId)
-    .eq('status', 'ativo')
-    .order('nome')
-
-  // Mensalidades do mês atual
-  const { data: mensalidadesRaw } = await admin
-    .from('mensalidades')
-    .select('*')
-    .eq('escola_id', escolaId)
-    .eq('mes_referencia', mesRef)
+  const valorPadrao   = config?.valor_mensalidade ?? 0
+  const diaVencimento = config?.dia_vencimento ?? 10
 
   const mensMap: Record<string, any> = {}
   for (const m of (mensalidadesRaw ?? [])) {
@@ -63,7 +59,7 @@ export default async function MensalidadesPage() {
       <MensalidadesClient
         alunos={alunos}
         escolaId={escolaId}
-        usuarioId={user.id}
+        usuarioId={usuario.id}
         valorPadrao={valorPadrao}
         diaVencimento={diaVencimento}
       />

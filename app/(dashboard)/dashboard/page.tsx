@@ -1,5 +1,5 @@
 import { createClient as createAdmin } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import {
   Users, BookOpen, AlertTriangle, Star,
   MessageSquare, DollarSign, ChevronRight,
@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { StatCard } from '@/components/dashboard/stat-card'
 import Link from 'next/link'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 async function getDashboardData(escolaId: string) {
   const admin = createAdmin()
@@ -49,24 +50,17 @@ const DIAS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM']
 const FREQ  = [88, 91, 95, 98, 82, 40, 10]
 
 export default async function DashboardPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const usuario = await getUsuarioAtual()
+  if (!usuario) redirect('/login')
 
-  const admin = createAdmin()
-  const { data: usuario } = await (admin as any)
-    .from('usuarios')
-    .select('nome, escola_id, escola:escolas(nome)')
-    .eq('id', user?.id)
-    .single() as { data: { nome: string; escola_id: string; escola: { nome: string } | null } | null }
-
-  const escolaId = usuario?.escola_id ?? ''
+  const escolaId = usuario.escola_id
   const stats = await getDashboardData(escolaId)
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long', day: 'numeric', month: 'long',
   })
 
-  const primeiroNome = usuario?.nome?.split(' ')[0] ?? 'Diretora'
+  const primeiroNome = usuario.nome.split(' ')[0]
 
   const hora = new Date().getHours()
   const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite'
@@ -87,7 +81,7 @@ export default async function DashboardPage() {
             {saudacao}, {primeiroNome}! 👋
           </h1>
           <p className="text-slate-500 mt-1 capitalize text-sm">
-            Aqui está o resumo de <span className="font-semibold text-primary">{usuario?.escola?.nome ?? 'sua escola'}</span> para hoje, {hoje}.
+            Aqui está o resumo de <span className="font-semibold text-primary">{usuario.escola?.nome ?? 'sua escola'}</span> para hoje, {hoje}.
           </p>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-white rounded-2xl px-4 py-2.5 shadow-soft border border-slate-100">

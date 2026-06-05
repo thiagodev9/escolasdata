@@ -1,16 +1,14 @@
 import { createClient as createAdmin } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
 import { FeedClient } from '@/components/feed/feed-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
+import { redirect } from 'next/navigation'
 
 export default async function FeedPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const usuario = await getUsuarioAtual()
+  if (!usuario) redirect('/login')
+
   const admin = createAdmin()
-
-  const { data: usuario } = await (admin as any)
-    .from('usuarios').select('escola_id, id, nome').eq('id', user?.id).single() as { data: any }
-
-  const escolaId = usuario?.escola_id ?? ''
+  const escolaId = usuario.escola_id
 
   const [postsRes, turmasRes] = await Promise.all([
     (admin as any)
@@ -29,8 +27,8 @@ export default async function FeedPage() {
         posts={postsRes.data ?? []}
         turmas={turmasRes.data ?? []}
         escolaId={escolaId}
-        autorId={usuario?.id ?? ''}
-        autorNome={usuario?.nome ?? ''}
+        autorId={usuario.id}
+        autorNome={usuario.nome}
       />
     </div>
   )

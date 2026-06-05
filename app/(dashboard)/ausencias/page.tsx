@@ -1,23 +1,15 @@
 export const dynamic = 'force-dynamic'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { AusenciasClient } from '@/components/ausencias/ausencias-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export default async function AusenciasPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const usuario = await getUsuarioAtual()
+  if (!usuario || !['super_admin','diretora'].includes(usuario.role)) redirect('/dashboard')
 
   const admin = createAdmin()
-  const { data: usuario } = await (admin as any)
-    .from('usuarios')
-    .select('escola_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!usuario || !['super_admin','diretora'].includes(usuario.role)) redirect('/dashboard')
 
   const [ausenciasRes, colaboradoresRes] = await Promise.all([
     (admin as any)

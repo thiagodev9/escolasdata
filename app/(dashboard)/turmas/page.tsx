@@ -1,15 +1,14 @@
 import { createClient as createAdmin } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
 import { TurmasClient } from '@/components/turmas/turmas-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
+import { redirect } from 'next/navigation'
 
 export default async function TurmasPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const admin = createAdmin()
+  const usuario = await getUsuarioAtual()
+  if (!usuario) redirect('/login')
 
-  const { data: usuario } = await (admin as any)
-    .from('usuarios').select('escola_id').eq('id', user?.id).single() as { data: { escola_id: string } | null }
-  const escolaId = usuario?.escola_id ?? ''
+  const admin = createAdmin()
+  const escolaId = usuario.escola_id
 
   const [turmasRes, professoresRes] = await Promise.all([
     (admin as any)

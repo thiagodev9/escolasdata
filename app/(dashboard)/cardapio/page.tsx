@@ -1,19 +1,15 @@
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { CardapioClient, type CardapioItem } from '@/components/cardapio/cardapio-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export const dynamic = 'force-dynamic'
 
 export default async function CardapioPage() {
-  const supabase = createClient()
-  const { data: { user } } = await (supabase as any).auth.getUser()
-  if (!user) redirect('/login')
-
-  const admin = createAdmin() as any
-  const { data: usuario } = await admin.from('usuarios').select('escola_id, role').eq('id', user.id).single()
+  const usuario = await getUsuarioAtual()
   if (!usuario) redirect('/login')
 
+  const admin = createAdmin() as any
   const escolaId = usuario.escola_id
 
   // Busca as 3 semanas ao redor (anterior, atual, próxima)

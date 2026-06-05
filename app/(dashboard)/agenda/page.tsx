@@ -1,37 +1,28 @@
 import { createClient as createAdmin } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
 import { AgendaClient } from '@/components/agenda/agenda-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
+import { redirect } from 'next/navigation'
 
 export default async function AgendaPage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const usuario = await getUsuarioAtual()
+  if (!usuario) redirect('/login')
+
   const admin = createAdmin()
+  const escolaId = usuario.escola_id
 
-  const { data: usuario } = await (admin as any)
-    .from('usuarios').select('escola_id').eq('id', user?.id).single() as { data: { escola_id: string } | null }
-  const escolaId = usuario?.escola_id ?? ''
+  // eventos e turmas em paralelo
+  const [eventosRes, turmasRes] = await Promise.all([
+    (admin as any).from('eventos').select('*').eq('escola_id', escolaId).order('data'),
+    (admin as any).from('turmas').select('id, nome').eq('escola_id', escolaId).order('nome'),
+  ])
 
-  // Buscar eventos (tabela pode não existir ainda — tratado com try/catch)
-  let eventos: any[] = []
-  try {
-    const { data } = await (admin as any)
-      .from('eventos')
-      .select('*')
-      .eq('escola_id', escolaId)
-      .order('data') as { data: any[] | null }
-    eventos = data ?? []
-  } catch {
-    eventos = []
-  }
-
-  const { data: turmas } = await (admin as any)
-    .from('turmas').select('id, nome').eq('escola_id', escolaId).order('nome') as { data: any[] | null }
+  const eventos: any[] = eventosRes.data ?? []
 
   return (
     <div className="p-6 lg:p-10">
       <AgendaClient
-        eventos={eventos ?? []}
-        turmas={turmas ?? []}
+        eventos={eventos}
+        turmas={turmasRes.data ?? []}
         escolaId={escolaId}
       />
     </div>
