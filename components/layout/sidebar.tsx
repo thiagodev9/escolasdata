@@ -251,6 +251,7 @@ export function Sidebar({ role, escolaNome, logoUrl, corPrimaria, usuario }: Sid
                     >
                       <Link
                         href={item.href}
+                        prefetch
                         className={cn(
                           'flex items-center gap-3 rounded-xl text-sm font-semibold transition-all group relative',
                           collapsed ? 'px-0 py-2 justify-center' : 'px-3 py-2.5',

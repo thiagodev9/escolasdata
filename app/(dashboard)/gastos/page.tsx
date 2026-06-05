@@ -1,28 +1,20 @@
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { GastosClient } from '@/components/gastos/gastos-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export const dynamic = 'force-dynamic'
 
 export default async function GastosPage() {
-  const supabase = createClient()
+  const usuario = await getUsuarioAtual()
+  if (!usuario || !['super_admin', 'diretora'].includes(usuario.role)) redirect('/dashboard')
 
-  const { data: { user } } = await (supabase as any).auth.getUser()
-  if (!user) redirect('/login')
+  const admin = createAdmin()
 
-  const { data: usuario } = await (supabase as any)
-    .from('usuarios')
-    .select('id, escola_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!usuario || !['super_admin','diretora'].includes(usuario.role)) redirect('/dashboard')
-
-  // Busca últimos 13 meses para comparação
   const dataMin = new Date()
   dataMin.setMonth(dataMin.getMonth() - 12)
 
-  const { data: gastos } = await (supabase as any)
+  const { data: gastos } = await (admin as any)
     .from('gastos')
     .select('*')
     .eq('escola_id', usuario.escola_id)

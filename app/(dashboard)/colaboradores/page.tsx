@@ -1,24 +1,17 @@
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { ColaboradoresClient } from '@/components/colaboradores/colaboradores-client'
+import { getUsuarioAtual } from '@/lib/queries/get-usuario'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ColaboradoresPage() {
-  const supabase = createClient()
+  const usuario = await getUsuarioAtual()
+  if (!usuario || !['super_admin', 'diretora'].includes(usuario.role)) redirect('/dashboard')
 
-  const { data: { user } } = await (supabase as any).auth.getUser()
-  if (!user) redirect('/login')
+  const admin = createAdmin()
 
-  const { data: usuario } = await (supabase as any)
-    .from('usuarios')
-    .select('escola_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!usuario || !['super_admin','diretora'].includes(usuario.role)) redirect('/dashboard')
-
-  const { data: colaboradores } = await (supabase as any)
+  const { data: colaboradores } = await (admin as any)
     .from('colaboradores')
     .select('*')
     .eq('escola_id', usuario.escola_id)

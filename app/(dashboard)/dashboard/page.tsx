@@ -1,4 +1,3 @@
-import { createClient as createAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import {
   Users, BookOpen, AlertTriangle, Star,
@@ -8,43 +7,8 @@ import {
 import { StatCard } from '@/components/dashboard/stat-card'
 import Link from 'next/link'
 import { getUsuarioAtual } from '@/lib/queries/get-usuario'
+import { getDashboardStats } from '@/lib/queries/dashboard-stats'
 
-async function getDashboardData(escolaId: string) {
-  const admin = createAdmin()
-  const hoje = new Date()
-  const mesHoje = String(hoje.getMonth() + 1).padStart(2, '0')
-  const diaHoje = String(hoje.getDate()).padStart(2, '0')
-
-  const [alunosRes, turmasRes, pendentesRes, feedRes, todosAlunosRes, colaboradoresRes] = await Promise.all([
-    (admin as any).from('alunos').select('id', { count: 'exact' }).eq('escola_id', escolaId).eq('status', 'ativo'),
-    (admin as any).from('turmas').select('id, nome, capacidade', { count: 'exact' }).eq('escola_id', escolaId),
-    (admin as any).from('alunos').select('id', { count: 'exact' }).eq('escola_id', escolaId).eq('status', 'pendente'),
-    (admin as any).from('feed_posts').select('id', { count: 'exact' }).eq('escola_id', escolaId),
-    (admin as any).from('alunos').select('id, nome, foto_url, dt_nascimento').eq('escola_id', escolaId).eq('status', 'ativo'),
-    (admin as any).from('colaboradores').select('id, nome, dt_admissao').eq('escola_id', escolaId).eq('ativo', true),
-  ])
-
-  const anivAlunos: { id: string; nome: string; foto_url: string | null }[] =
-    (todosAlunosRes.data ?? [])
-      .filter((a: { dt_nascimento: string }) => {
-        const [, m, d] = (a.dt_nascimento ?? '').split('-')
-        return m === mesHoje && d === diaHoje
-      })
-      .map((a: { id: string; nome: string; foto_url: string | null }) => ({
-        id: a.id, nome: a.nome, foto_url: a.foto_url ?? null,
-      }))
-
-  const aniversariantes = anivAlunos
-
-  return {
-    totalAlunos: alunosRes.count ?? 0,
-    totalTurmas: turmasRes.count ?? 0,
-    turmas: turmasRes.data ?? [],
-    pendentes: pendentesRes.count ?? 0,
-    totalPosts: feedRes.count ?? 0,
-    aniversariantes,
-  }
-}
 
 const DIAS = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM']
 const FREQ  = [88, 91, 95, 98, 82, 40, 10]
@@ -54,7 +18,7 @@ export default async function DashboardPage() {
   if (!usuario) redirect('/login')
 
   const escolaId = usuario.escola_id
-  const stats = await getDashboardData(escolaId)
+  const stats = await getDashboardStats(escolaId)
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long', day: 'numeric', month: 'long',
